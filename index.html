@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Complete Task, Earn USDT</title>
+  <title>Complete TASKS, Earn USDT</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
- 
-    bodtttt{
+
+    body{
       font-family:system-ui,Segoe UI,Arial;
       background:#050816;
       color:#e6eef8;
@@ -15,24 +15,14 @@
       flex-direction:column;
     }
 
-
-
-html{
-  background:#050816;
+    html, body {
+  height: 100%;
 }
 
-body{
-  margin:0;
-  min-height:100dvh;   /* mobile-safe viewport */
-  background:#050816;
-  color:#e6eef8;
-  display:flex;
-  flex-direction:column;
-
+body {
+  min-height: 100svh; /* Samsung / modern fix */
 }
 
-
-    
 
 @media (max-width: 768px) {
   header {
@@ -42,7 +32,6 @@ body{
   }
 }
 
-    
     
 
     /* === HEADER & NAV (same structure as index) === */
@@ -147,7 +136,6 @@ body{
     }
 
     .reward-card{
-      
       border-radius:1.5rem;
       padding:1.4rem 1.6rem;
       display:flex;
@@ -159,9 +147,6 @@ body{
       background:radial-gradient(circle at top left,#111827,#020617);
     }
 
-
-
-    
 
 /* ===== UPCOMING REWARD ===== */
 .reward-lock-badge{
@@ -182,7 +167,7 @@ body{
 
     
     .reward-left,
-.reward-center,
+    .reward-center,
     .reward-right{
       display:flex;
       flex-direction:column;
@@ -855,7 +840,7 @@ border-radius:999px;
         align-items:center;
       }
       .reward-right{
-    align-items:flex-end;
+        align-items:center;
       }
     }
 
@@ -1039,7 +1024,31 @@ border-radius:999px;
 }
 
 
+@media (max-width:640px){
+  .nav{
+    flex-direction:column;
+    gap:6px;
+  }
 
+  .logo{
+    text-align:center;
+  }
+}
+
+.logo-center{
+  justify-self:center;
+}
+
+.logo{
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size:1.05rem;
+  font-weight:700;
+  letter-spacing:0.28em;
+}
+
+.logo-usdt{ color:#26A17B; }
+.logo-offers{ color:#E5E7EB; }
+    
     
     
     /* Header mobile cleanup (match index) */
@@ -1056,46 +1065,12 @@ border-radius:999px;
         gap:6px;
       }
 
-
-
-      
-      .lMGD{
+      .logo{
         width:100%;
         text-align:center;
         font-size:0.9rem;
         letter-spacing:3px;
       }
-
-.logo-center{
-  justify-self:center;
-}
-
-.logo{
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size:1.05rem;
-  font-weight:700;
-  letter-spacing:0.28em;
-}
-
-.logo-usdt{ color:#26A17B; }
-.logo-offers{ color:#E5E7EB; }
-
-
-@media (max-width:640px){
-  .nav{
-    flex-direction:column;
-    gap:6px;
-  }
-
-  .logo{
-    text-align:center;
-  }
-}
-
-
-
-
-      
       .nav-right{
         width:100%;
         justify-content:center;
@@ -1130,16 +1105,20 @@ border-radius:999px;
 
   <header>
     <div class="nav">
- <div class="logo-center">
+     
+<div class="logo-center">
       <div class="logo">
         <span class="logo-usdt">USDT</span><span class="logo-offers">OFFERS</span>
       </div>
- </div>
+</div>
+
+      
       <div class="nav-right">
      <a href="#" id="aboutBtn">About</a>
 <a href="#" id="contactBtn">Contact</a>
-          <button id="connectBtn" class="connect">Connect Wallet</button>  </div>      
-
+      
+        <button id="connectBtn" class="connect">Connect Wallet</button>
+      </div>
     </div>
   </header>
 
@@ -1333,7 +1312,7 @@ border-radius:999px;
       <div class="task-section">
         <h3>Task 1 — Watch the Intro Video</h3>
         <p>
-          Watch this video to understand how USDTOFFERS.COM and the reward system works.
+          Watch this video to understand how usdtoffers.com and the reward system works.
         </p>
         <div class="video-wrapper">
     <div class="video-click-overlay"></div>
@@ -1341,7 +1320,7 @@ border-radius:999px;
 <iframe
   id="task1Player"
   src="https://www.youtube.com/embed/lqvH1bs8mJc?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
-  title="MY Intro"
+  title="GoPro Intro"
   allow="autoplay; encrypted-media"
   allowfullscreen>
 </iframe>
@@ -1718,7 +1697,7 @@ border-radius:999px;
 
   <!-- FOOTER (same structure as index) -->
   <footer>
-    © <span id="year"></span> USDTOFFERS.COM — BSC (BEP-20) • No private keys stored.
+    © <span id="year"></span> USDT OFFERS — BSC (BEP-20) • No private keys stored.
   </footer>
 
 
@@ -1811,7 +1790,7 @@ aboutBtn?.addEventListener("click", e=>{
   openModal(`
     <h3>About USDTOFFERS</h3>
     <p>
-     USDTOFFERS is a reward-based Web3 platform built on
+      USDTOFFERS is a reward-based Web3 platform built on
       <strong>BNB Smart Chain</strong>.
       <br><br>
       Users connect wallets, complete tasks, and unlock rewards.
@@ -1849,7 +1828,7 @@ contactBtn?.addEventListener("click", e=>{
     <h3>Contact</h3>
     <p>
       📧 Email: support@usdtoffers.com<br>
-      🌐 Website: usdtoffer.com<br>
+      🌐 Website: usdtoffers.com<br>
       🤝 Partnerships & support inquiries welcome.
     </p>
   `);
@@ -3161,3 +3140,4 @@ if(taskBtn){
   </script>
 </body>
 </html>
+
