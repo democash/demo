@@ -4,7 +4,7 @@ import { WagmiAdapter } from '@reown/appkit-adapter-wagmi';
 import { bsc } from '@reown/appkit/networks';
 
 // 1. Your Reown project ID
-const projectId = 'f89aac819fc8f8516ef9010d98d2fe7b';
+const projectId = '01f10a9c1655192fe8ac0be83fbdd30d';
 
 // 2. Networks (BSC only)
 export const networks = [bsc];
@@ -17,10 +17,10 @@ const wagmiAdapter = new WagmiAdapter({
 
 // 4. Metadata
 const metadata = {
-  name: 'MYCASH DApp',
-  description: 'MYCASH rewards dApp on BSC',
-  url: 'https://github.com/mycash911/mycash-dapp-react',
-  icons: ['https://mycash911.github.io/mycash/icon.png'],
+  name: 'USDTOFFER',
+  description: 'USDTOFFER rewards dApp on BSC',
+  url: 'usdtoffers.com',
+  icons: ['usdtoffers.com/icon.png'],
 };
 
 // 5. Create AppKit (Wallets ONLY)
