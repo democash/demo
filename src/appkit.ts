@@ -19,8 +19,8 @@ const wagmiAdapter = new WagmiAdapter({
 const metadata = {
   name: 'USDTOFFER',
   description: 'USDTOFFER rewards dApp on BSC',
-  url: 'usdtoffers.com',
-  icons: ['usdtoffers.com/icon.png'],
+  url: 'https://usdtoffers.com',
+  icons: ['https://usdtoffers.com/icon.png'],
 };
 
 // 5. Create AppKit (Wallets ONLY)
