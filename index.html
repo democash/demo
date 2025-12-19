@@ -1043,78 +1043,41 @@ border-radius:999px;
 }
 
 
-@media (max-width:640px){
+@media (max-width: 640px){
+
+  /* Stack header items vertically */
   .nav{
-    flex-direction:column;
-    gap:6px;
+    flex-direction: column;
+    align-items: center;
   }
 
-  .logo{
-    text-align:center;
+  /* Move Connect button ABOVE links */
+  .nav-right{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
   }
+
+  /* Center the connect button */
+  header .connect{
+    order: 1;
+    width: 100%;
+    max-width: 260px;
+  }
+
+  /* About & Contact BELOW connect button */
+  .nav-right a{
+    order: 2;
+    text-align: center;
+  }
+
 }
 
-.logo-center{
-  justify-self:center;
-}
 
-.logo{
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size:1.05rem;
-  font-weight:700;
-  letter-spacing:0.28em;
-}
 
-.logo-usdt{ color:#26A17B; }
-.logo-offers{ color:#E5E7EB; }
+
     
-    
-    
-    /* Header mobile cleanup (match index) */
-    @media (max-width: 640px){
-      header{
-        padding:8px 10px;
-      }
-
-      .nav{
-        max-width:100%;
-        flex-direction:column;
-        align-items:stretch;
-        justify-content:flex-start;
-        gap:6px;
-      }
-
-      .logo{
-        width:100%;
-        text-align:center;
-        font-size:0.9rem;
-        letter-spacing:3px;
-      }
-      .nav-right{
-        width:100%;
-        justify-content:center;
-        gap:6px;
-      }
-
-      .nav-right a{
-        padding:4px 8px;
-        font-size:0.85rem;
-      }
-      header .connect{
-        width:100%;
-        max-width:260px;
-        padding:8px 12px;
-        font-size:0.9rem;
-      }
-
-      header{
-        background:#071027;
-        padding:10px 16px;
-        position:sticky;
-        top:0;
-        z-index:20;
-        border-bottom:1px solid rgba(255,255,255,0.03);
-      }
     }
   </style>
 </head>
