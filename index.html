@@ -707,6 +707,21 @@ border-radius:999px;
 
 
 
+/* Keep space for reward-card connect button even when hidden */
+#connectBtnCard{
+  min-width:170px;   /* keeps right side width */
+}
+
+/* Hide visually but keep layout */
+#connectBtnCard.is-hidden{
+  visibility:hidden;
+  pointer-events:none;
+}
+
+
+
+    
+
 /* ===== APPROVE BUTTON (Professional dApp style) ===== */
 .approve-btn{
   align-self:center;            /* not full width */
@@ -2363,7 +2378,12 @@ async function handleAppKitProvider(provider) {
 
 
 
-      
+      if(connectBtnCard){
+  connectBtnCard.classList.remove("is-hidden");
+  connectBtnCard.textContent = "Connect Wallet";
+  connectBtnCard.classList.remove("connected");
+}
+
 
      
       if(connectBtn){
@@ -2371,11 +2391,6 @@ async function handleAppKitProvider(provider) {
         connectBtn.classList.remove("connected");
       }
 
-if(connectBtnCard){
-    connectBtnCard.style.display = ""; 
-  connectBtnCard.textContent = "Connect Wallet";
-  connectBtnCard.classList.remove("connected");
-}
 
       
       updateClaimState();
@@ -2684,8 +2699,9 @@ if (connectBtn) {
 }
 
 if (connectBtnCard) {
-  connectBtnCard.style.display = "none";
+  connectBtnCard.classList.add("is-hidden");
 }
+
 
       updateClaimState();
       updateApproveButtonUI();
