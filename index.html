@@ -1053,24 +1053,19 @@ border-radius:999px;
   .logo-offers{ color:#E5E7EB; }
 
 
-/* ===== Header mobile cleanup (<=640px) ===== */
-@media (max-width: 640px){
 
-  header{
-    padding:10px 16px;
-    background:#071027;
-  
-    z-index:20;
-    border-bottom:1px solid rgba(255,255,255,0.03);
-  }
+    @media (max-width: 640px){
+      header{
+        padding:8px 10px;
+      }
 
-  .nav{
-    max-width:100%;
-    flex-direction:column;
-    align-items:stretch;
-    justify-content:flex-start;
-    gap:6px;
-  }
+      .nav{
+        max-width:100%;
+        flex-direction:column;
+        align-items:stretch;
+        justify-content:flex-start;
+        gap:6px;
+      }
 
   .logo{
     text-align:center;
@@ -1087,33 +1082,33 @@ border-radius:999px;
   .logo-usdt{ color:#26A17B; }
   .logo-offers{ color:#E5E7EB; }
 
-  .lwwffogo{
-    width:100%;
-    text-align:center;
-    font-size:0.9rem;
-    letter-spacing:3px;
-  }
+        
+      }
+      .nav-right{
+        width:100%;
+        justify-content:center;
+        gap:6px;
+      }
 
-  .nav-right{
-    width:100%;
-    justify-content:center;
-    gap:6px;
-  }
+      .nav-right a{
+        padding:4px 8px;
+        font-size:0.85rem;
+      }
+      header .connect{
+        width:100%;
+        max-width:260px;
+        padding:8px 12px;
+        font-size:0.9rem;
+      }
 
-  .nav-right a{
-    padding:4px 8px;
-    font-size:0.85rem;
-  }
-
-  header .connect{
-    width:100%;
-    max-width:260px;
-    padding:8px 12px;
-    font-size:0.9rem;
-  }
-}
-
-
+      header{
+        background:#071027;
+        padding:10px 16px;
+        position:sticky;
+        top:0;
+        z-index:20;
+        border-bottom:1px solid rgba(255,255,255,0.03);
+      }
 
 
     
