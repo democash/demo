@@ -996,17 +996,20 @@ border-radius:999px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 16px;
+  gap: 22px;
   flex-wrap: wrap;
-
+  margin-top: 10px;
 }
 
+/* Base logo style */
 .footer-partners img {
-  height: 22px;
+  height: 30px;                    /* ⬅️ BIGGER */
   width: auto;
+  max-width: 120px;
 
-  opacity: 0.85;
-  filter: grayscale(100%) contrast(1.1);
+  opacity: 0.9;
+  filter: grayscale(100%) brightness(1.15);
+  color: transparent !important;
 
   transition:
     opacity 0.25s ease,
@@ -1014,20 +1017,20 @@ border-radius:999px;
     transform 0.25s ease;
 }
 
-
+/* Hover = brand reveal */
 .footer-partners img:hover {
   opacity: 1;
-  filter: grayscale(0%) contrast(1.15);
+  filter: grayscale(0%) brightness(1.2);
   transform: translateY(-1px);
 }
 
 
-
-    @media (max-width: 480px) {
+@media (max-width: 480px) {
   .footer-partners img {
-    height: 18px;
+    height: 26px;
   }
 }
+
 
 
     
@@ -1621,6 +1624,25 @@ border-radius:999px;
   </button>
 </div>
 <br>
+   
+<div class="center-text">
+  <h2>Reward Tasks</h2>
+  
+</div>
+  <!-- ===== TASK PROGRESS BAR ===== -->
+<div class="task-progress">
+  <div class="task-progress-bar">
+    <div id="taskProgressFill"></div>
+  </div>
+  <div id="taskProgressText" class="task-progress-text">
+    0 / 0 completed
+  </div>
+</div>
+
+
+      
+<br>    
+      
 <!-- ===== BALANCE BOX (TASK PAGE ONLY) ===== -->
 <div class="wallet-status-card" id="balanceBox">
   <div class="wallet-status-row">
@@ -1652,25 +1674,9 @@ border-radius:999px;
       
 
 
-   
-<div class="center-text">
-  <h2>Reward Tasks</h2>
-  
-</div>
-
-<!-- ===== TASK PROGRESS BAR ===== -->
-<div class="task-progress">
-  <div class="task-progress-bar">
-    <div id="taskProgressFill"></div>
-  </div>
-  <div id="taskProgressText" class="task-progress-text">
-    0 / 0 completed
-  </div>
-</div>
 
 
-      
-<br>
+
 
       <!-- Task 1: video -->
     <div class="task-section" data-task="task1" data-order="1">
