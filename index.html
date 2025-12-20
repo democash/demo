@@ -834,6 +834,34 @@ border-radius:999px;
 }
 
 
+/* ===== TASK PROGRESS BAR ===== */
+.task-progress {
+  max-width: 420px;
+  margin: 10px auto 18px;
+  text-align: center;
+}
+
+.task-progress-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(148,163,184,0.25);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.task-progress-bar > div {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 999px;
+  transition: width 0.6s ease;
+}
+
+.task-progress-text {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #9fb0c8;
+}
 
 
     
@@ -1491,6 +1519,19 @@ border-radius:999px;
   <h2>Reward Tasks</h2>
   
 </div>
+
+<!-- ===== TASK PROGRESS BAR ===== -->
+<div class="task-progress">
+  <div class="task-progress-bar">
+    <div id="taskProgressFill"></div>
+  </div>
+  <div id="taskProgressText" class="task-progress-text">
+    0 / 0 completed
+  </div>
+</div>
+
+
+      
 <br>
 
       <!-- Task 1: video -->
@@ -2477,6 +2518,8 @@ function completeVideoTask(task) {
   task.doneFlag();
   updateClaimState();
   updateTaskUnlocks();
+  updateTaskProgress();
+
 
 }
 
@@ -2529,6 +2572,8 @@ function loadEarnings() {
     });
 
      updateTaskUnlocks();
+    updateTaskProgress();
+
   } catch (e) {
     console.warn("Failed to load earnings", e);
   }
@@ -2576,6 +2621,23 @@ function updateBalanceBox() {
 }
 
 
+function updateTaskProgress() {
+  const totalTasks = document.querySelectorAll(
+    ".task-section[data-task]"
+  ).length;
+
+  const completedCount = completedTasks.size;
+
+  const percent = totalTasks
+    ? Math.min((completedCount / totalTasks) * 100, 100)
+    : 0;
+
+  const fill = document.getElementById("taskProgressFill");
+  const text = document.getElementById("taskProgressText");
+
+  if (fill) fill.style.width = percent + "%";
+  if (text) text.textContent = `${completedCount} / ${totalTasks} completed`;
+}
 
 
 
@@ -3482,6 +3544,8 @@ if (approveBtn) {
       updateTaskAccessUI();
 setupAppKitProviderWatcher();
       updateTaskUnlocks();
+      updateTaskProgress();
+
 
 
       if(connectBtn){
