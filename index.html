@@ -3544,10 +3544,13 @@ function showTaskPage() {
   setTimeout(() => {
     Object.values(videoTasks).forEach(task => {
       if (task.player && task.player.setSize) {
-        task.player.setSize(
-          task.player.getIframe().offsetWidth,
-          task.player.getIframe().offsetHeight
-        );
+        if (!isMobile && task.player?.setSize) {
+  task.player.setSize(
+    task.player.getIframe().offsetWidth,
+    task.player.getIframe().offsetHeight
+  );
+}
+
       }
     });
 
