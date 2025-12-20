@@ -912,6 +912,18 @@ border-radius:999px;
   cursor: not-allowed;
 }
 
+.task-locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.task-locked::after {
+  content: "🔒 Complete previous task to unlock";
+  display: block;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
 
 
     
@@ -1430,8 +1442,9 @@ border-radius:999px;
 <br>
 
       <!-- Task 1: video -->
-   <div class="task-section" data-task="task1">
-  <div class="task-amount-badge">+$0.50</div>
+    <div class="task-section" data-task="task1" data-order="1">
+
+ <div class="task-amount-badge">+$0.50</div>
         <h3>Watch the Intro Video</h3>
         <p>
           Watch this video to understand how usdtoffers.com and the reward system works.
@@ -1485,7 +1498,8 @@ border-radius:999px;
 
 
 <!-- Task 5: video -->
-<div class="task-section" data-task="task5">
+<div class="task-section" data-task="task5" data-order="2">
+
   <div class="task-amount-badge">+$0.50</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -1523,7 +1537,8 @@ border-radius:999px;
 
 
 <!-- Task 6: video -->
-<div class="task-section" data-task="task6">
+<div class="task-section" data-task="task6" data-order="3">
+
   <div class="task-amount-badge">+$1</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -1560,7 +1575,8 @@ border-radius:999px;
 
 
 <!-- Task 7: video -->
-<div class="task-section" data-task="task7">
+<div class="task-section" data-task="task7" data-order="4">
+
   <div class="task-amount-badge">+$1</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -1599,7 +1615,8 @@ border-radius:999px;
 
 
 <!-- Task 8: video -->
-<div class="task-section" data-task="task8">
+<div class="task-section" data-task="task8" data-order="5">
+
   <div class="task-amount-badge">+$2</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -1636,7 +1653,8 @@ border-radius:999px;
       
 
 <!-- Task 9: video -->
-<div class="task-section" data-task="task9">
+<div class="task-section" data-task="task9" data-order="6">
+
   <div class="task-amount-badge">+$2</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -1672,7 +1690,8 @@ border-radius:999px;
 
 
 <!-- Task 10: video -->
-<div class="task-section" data-task="task10">
+<div class="task-section" data-task="task10" data-order="7">
+
   <div class="task-amount-badge">+$3</div>
   <h3>Watch Advanced Guide</h3>
   <p>Watch this video to unlock the next reward step.</p>
@@ -2404,6 +2423,8 @@ function completeVideoTask(task) {
 
   task.doneFlag();
   updateClaimState();
+  updateTaskUnlocks();
+
 }
 
 
@@ -2454,12 +2475,35 @@ function loadEarnings() {
       }
     });
 
+     updateTaskUnlocks();
   } catch (e) {
     console.warn("Failed to load earnings", e);
   }
 }
 
 
+function updateTaskUnlocks() {
+  const tasks = [...document.querySelectorAll(".task-section[data-order]")]
+    .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
+
+  tasks.forEach((taskEl, index) => {
+    const taskKey = taskEl.dataset.task;
+
+    if (index === 0) {
+      // First task always unlocked
+      taskEl.classList.remove("task-locked");
+      return;
+    }
+
+    const prevTaskKey = tasks[index - 1].dataset.task;
+
+    if (completedTasks.has(prevTaskKey)) {
+      taskEl.classList.remove("task-locked");
+    } else {
+      taskEl.classList.add("task-locked");
+    }
+  });
+}
 
 
     
@@ -2499,6 +2543,8 @@ document.addEventListener("click", (e) => {
 
   saveEarnings();
   updateBalanceBox();
+       updateTaskUnlocks();
+
 });
 
 
@@ -3366,6 +3412,8 @@ if (approveBtn) {
       updateClaimState();
       updateTaskAccessUI();
 setupAppKitProviderWatcher();
+      updateTaskUnlocks();
+
 
       if(connectBtn){
         connectBtn.addEventListener("click", function(){
