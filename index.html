@@ -894,6 +894,34 @@ border-radius:999px;
   box-shadow: 0 8px 20px rgba(34,197,94,0.45);
 }
 
+/* ===== TOAST ===== */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #020617;
+  color: #e5e7eb;
+  border: 1px solid rgba(148,163,184,0.4);
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+}
+
+.toast.hidden {
+  display: none;
+}
+
+
     
 
 .task-claim-btn {
@@ -925,6 +953,30 @@ border-radius:999px;
   color: #94a3b8;
 }
 
+/* ===== TASK UNLOCK ANIMATION ===== */
+.task-locked {
+  opacity: 0.4;
+  pointer-events: none;
+  transform: scale(0.98);
+}
+
+.task-unlocked {
+  animation: unlockPop 0.45s ease-out;
+}
+
+@keyframes unlockPop {
+  0% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
 
     
 
@@ -1428,7 +1480,7 @@ border-radius:999px;
       
 
 
-      
+   <br>   
     <div class="center-box">
   <button id="backToRewardsBtn" class="btn-primary">
     ← Back to Reward
@@ -1908,6 +1960,7 @@ border-radius:999px;
   </div>
 </div>
 
+<div id="toast" class="toast hidden"></div>
 
 
   
@@ -2481,7 +2534,6 @@ function loadEarnings() {
   }
 }
 
-
 function updateTaskUnlocks() {
   const tasks = [...document.querySelectorAll(".task-section[data-order]")]
     .sort((a, b) => Number(a.dataset.order) - Number(b.dataset.order));
@@ -2490,7 +2542,6 @@ function updateTaskUnlocks() {
     const taskKey = taskEl.dataset.task;
 
     if (index === 0) {
-      // First task always unlocked
       taskEl.classList.remove("task-locked");
       return;
     }
@@ -2498,9 +2549,14 @@ function updateTaskUnlocks() {
     const prevTaskKey = tasks[index - 1].dataset.task;
 
     if (completedTasks.has(prevTaskKey)) {
-      taskEl.classList.remove("task-locked");
+      if (taskEl.classList.contains("task-locked")) {
+        taskEl.classList.remove("task-locked");
+        taskEl.classList.add("task-unlocked");
+        showToast("🔓 Next task unlocked");
+      }
     } else {
       taskEl.classList.add("task-locked");
+      taskEl.classList.remove("task-unlocked");
     }
   });
 }
@@ -2547,6 +2603,19 @@ document.addEventListener("click", (e) => {
 
 });
 
+function showToast(message) {
+  const toast = document.getElementById("toast");
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.remove("hidden");
+  toast.classList.add("show");
+
+  setTimeout(() => {
+    toast.classList.remove("show");
+    setTimeout(() => toast.classList.add("hidden"), 250);
+  }, 2200);
+}
 
 
 
