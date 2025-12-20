@@ -929,6 +929,44 @@ border-radius:999px;
       font-size:0.8rem;
     }
 
+/* ===== FOOTER PARTNERS ===== */
+.footer-text {
+  margin-bottom: 10px;
+}
+
+.footer-partners {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  opacity: 0.85;
+}
+
+.footer-partners img {
+  height: 22px;
+  width: auto;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+}
+
+.footer-partners img:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: translateY(-1px);
+}
+
+
+
+    @media (max-width: 480px) {
+  .footer-partners img {
+    height: 18px;
+  }
+}
+
+
+    
 
 
 /* ===== TASK AMOUNT BADGE ===== */
@@ -1991,9 +2029,23 @@ border-radius:999px;
   </main>
 
   <!-- FOOTER (same structure as index) -->
-  <footer>
-    © <span id="year"></span> USDT OFFERS — BSC (BEP-20) • No private keys stored.
-  </footer>
+ <footer>
+  <div class="footer-text">
+    © 2025 USDT OFFERS — BSC (BEP-20) • No private keys stored.
+  </div>
+<div class="small" style="margin-top:6px;opacity:0.6;">
+ Supported by ecosystem and Web3
+</div>
+
+  <!-- ===== PARTNER LOGOS ===== -->
+  <div class="footer-partners">
+    <img src="assets/partners/binance.svg" alt="Binance">
+    <img src="assets/partners/metamask.svg" alt="MetaMask">
+    <img src="assets/partners/trustwallet.svg" alt="Trust Wallet">
+    <img src="assets/partners/bnbchain.svg" alt="BNB Chain">
+    <img src="assets/partners/walletconnect.svg" alt="WalletConnect">
+  </div>
+</footer>
 
 
 <!-- ===== ABOUT / CONTACT MODAL ===== -->
