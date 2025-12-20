@@ -992,45 +992,42 @@ border-radius:999px;
   margin-bottom: 10px;
 }
 
+/* ===== FOOTER PARTNERS (PNG) ===== */
 .footer-partners {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 22px;
   flex-wrap: wrap;
-  margin-top: 10px;
+  margin-top: 12px;
 }
 
-/* Base logo style */
 .footer-partners img {
-  height: 30px;                    /* ⬅️ BIGGER */
+  height: 32px;              /* 👈 good visual weight */
   width: auto;
   max-width: 120px;
 
-  opacity: 0.9;
-  filter: grayscale(100%) brightness(1.15);
-  color: transparent !important;
-
-  transition:
-    opacity 0.25s ease,
-    filter 0.25s ease,
-    transform 0.25s ease;
+  opacity: 0.95;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
-/* Hover = brand reveal */
 .footer-partners img:hover {
   opacity: 1;
-  filter: grayscale(0%) brightness(1.2);
   transform: translateY(-1px);
 }
 
-
+/* Footer note */
+.footer-note {
+  margin-top: 8px;
+  opacity: 0.6;
+  font-size: 0.75rem;
+}
+    
 @media (max-width: 480px) {
   .footer-partners img {
     height: 26px;
   }
 }
-
 
 
     
@@ -2112,14 +2109,17 @@ border-radius:999px;
 <div class="small" style="margin-top:6px;opacity:0.6;">
  Supported by ecosystem and Web3
 </div>
-
+<div class="small footer-note">
+  Logos are trademarks of their respective owners.
+</div>
   <!-- ===== PARTNER LOGOS ===== -->
   <div class="footer-partners">
-    <img src="assets/binance.jpg" alt="Binance">
-    <img src="assets/metamask.jpg" alt="MetaMask">
-    <img src="assets/trustwallet.jpg" alt="Trust Wallet">
-    <img src="assets/bnbchain.jpg" alt="BNB Chain">
-    <img src="assets/walletconnect.jpg" alt="WalletConnect">
+   <img src="assets/partners/binance.png" alt="Binance">
+  <img src="assets/partners/metamask.png" alt="MetaMask">
+  <img src="assets/partners/trustwallet.png" alt="Trust Wallet">
+  <img src="assets/partners/bnbchain.png" alt="BNB Chain">
+  <img src="assets/partners/walletconnect.png" alt="WalletConnect">
+ <img src="assets/partners/usdt.png" alt="BNB Chain">
   </div>
 </footer>
 
