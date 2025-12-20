@@ -1155,12 +1155,7 @@ border-radius:999px;
       }
     }
 
-/* 🔥 Android / touch devices must tap iframe directly */
-@media (pointer: coarse) {
-  .video-click-overlay {
-    display: none !important;
-  }
-}
+
 
 /* ================== PROFESSIONAL DAPP TIERS ================== */
 
@@ -1684,7 +1679,7 @@ border-radius:999px;
           Watch this video to understand how usdtoffers.com and the reward system works.
         </p>
         <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+   
       <!-- Replace src with your own embedded video later -->
 <iframe
   id="task1Player"
@@ -1778,7 +1773,7 @@ border-radius:999px;
   <p>Watch this video to unlock the next reward step.</p>
 
   <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+    
 
     <iframe
       id="task6Player"
@@ -1816,7 +1811,7 @@ border-radius:999px;
   <p>Watch this video to unlock the next reward step.</p>
 
   <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+    
 
     <iframe
       id="task7Player"
@@ -1856,7 +1851,7 @@ border-radius:999px;
   <p>Watch this video to unlock the next reward step.</p>
 
   <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+
 
     <iframe
       id="task8Player"
@@ -1894,7 +1889,7 @@ border-radius:999px;
   <p>Watch this video to unlock the next reward step.</p>
 
   <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+  
 
     <iframe
       id="task9Player"
@@ -1931,7 +1926,7 @@ border-radius:999px;
   <p>Watch this video to unlock the next reward step.</p>
 
   <div class="video-wrapper">
-    <div class="video-click-overlay"></div>
+    
 
     <iframe
       id="task10Player"
@@ -2192,9 +2187,8 @@ border-radius:999px;
     
 
 // ===== ABOUT / CONTACT POPUPS =====
-    const isMobile =
-  /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-  /wv|Trust|MetaMask/i.test(navigator.userAgent);
+const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
 
 const aboutBtn   = document.getElementById("aboutBtn");
 const contactBtn = document.getElementById("contactBtn");
@@ -2360,9 +2354,7 @@ function earningsStorageKey() {
 let task1Player = null;
 let ytReady = false;
 
-const isAndroidWebView =
-  /Android/i.test(navigator.userAgent) &&
-  /wv|Trust|MetaMask/i.test(navigator.userAgent);
+
 
     
     const videoTasks = {
@@ -2516,38 +2508,27 @@ function updateVideoTimerUI(task) {
 }
 
 function enableVideoClickToPlay() {
-  document.querySelectorAll(".video-click-overlay").forEach(overlay => {
+  // 🔥 MOBILE: do NOTHING (iframe must receive direct touch)
+  if (isMobile) return;
 
+  // DESKTOP ONLY
+  document.querySelectorAll(".video-wrapper").forEach(wrapper => {
+    // Avoid duplicate overlays
+    if (wrapper.querySelector(".video-click-overlay")) return;
 
+    const overlay = document.createElement("div");
+    overlay.className = "video-click-overlay";
+    wrapper.appendChild(overlay);
 
-
-     if (isMobile) {
-      // 🔥 MOBILE: iframe must receive direct touch
-      overlay.remove();
-      return;
-    }
-
-    
-    // 🔥 ANDROID IN-APP BROWSERS (Trust / MetaMask)
-    if (isAndroidWebView) {
-      // Let user tap the iframe directly
-      overlay.style.display = "none";
-      return;
-    }
-
-    // ✅ DESKTOP & NORMAL MOBILE BROWSERS
     overlay.addEventListener("click", () => {
-      const wrapper = overlay.closest(".video-wrapper");
       const iframe = wrapper.querySelector("iframe");
       if (!iframe) return;
 
-      const taskKey = Object.keys(videoTasks).find(
-        k => videoTasks[k].playerId === iframe.id
+      const task = Object.values(videoTasks).find(
+        t => t.playerId === iframe.id
       );
-      if (!taskKey) return;
 
-      const task = videoTasks[taskKey];
-      task.player?.playVideo();
+      task?.player?.playVideo();
     });
   });
 }
