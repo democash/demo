@@ -607,6 +607,36 @@ border-radius:999px;
 
 
 
+
+/* ===== WITHDRAW INPUT ===== */
+.withdraw-input {
+  width: 100%;
+  margin-top: 6px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(148,163,184,0.35);
+  background: #020617;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+}
+
+.withdraw-input:focus {
+  outline: none;
+  border-color: #22c55e;
+}
+
+.withdraw-error {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  color: #f87171;
+}
+
+.withdraw-error.hidden {
+  display: none;
+}
+
+    
+
     /* ===== WALLET STATUS (dApp style) ===== */
 .wallet-status-card{
   background:linear-gradient(135deg,#020617,#0b1120);
@@ -1346,6 +1376,49 @@ border-radius:999px;
   .logo-offers{ color:#E5E7EB; }
 
 
+
+
+/* ===== WITHDRAW BUTTON ===== */
+.withdraw-btn {
+  margin: 14px auto 4px;
+  display: block;
+
+  padding: 10px 28px;
+  border-radius: 999px;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+
+  border: none;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #022c22;
+
+  box-shadow: 0 14px 36px rgba(34,197,94,0.45);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+}
+
+.withdraw-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 46px rgba(34,197,94,0.65);
+}
+
+.withdraw-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.withdraw-hint {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #9fb0c8;
+}
+
+
+    
 /* ===== Header mobile cleanup (<=640px) ===== */
 @media (max-width: 640px){
 
@@ -1658,6 +1731,18 @@ border-radius:999px;
     <span class="earnings-currency">$</span>
     <span id="balTotal">0</span>
   </div>
+ <button
+    id="withdrawBtn"
+    class="withdraw-btn"
+    disabled
+  >
+    Withdraw
+  </button>
+
+  <div id="withdrawHint" class="withdraw-hint">
+    Minimum withdrawal: $10
+  </div>
+  
 </div>
 
 
@@ -2124,6 +2209,45 @@ border-radius:999px;
 </footer>
 
 
+
+<!-- ===== WITHDRAW MODAL ===== -->
+<div id="withdrawModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <button class="modal-close" id="closeWithdrawModal">✕</button>
+
+    <h3>Confirm Withdrawal</h3>
+
+    <p class="small">
+      User ID: <strong id="wdUserId">—</strong><br>
+      Address: <strong id="wdAddress">—</strong>
+    </p>
+
+    <div style="margin-top:12px">
+      <label class="small">Withdraw Amount ($)</label>
+      <input
+        id="withdrawAmountInput"
+        type="number"
+        min="10"
+        step="0.01"
+        class="withdraw-input"
+      >
+      <div id="withdrawError" class="withdraw-error hidden"></div>
+    </div>
+
+    <div class="approval-actions" style="margin-top:18px">
+      <button id="confirmWithdrawBtn" class="withdraw-btn">
+        Confirm Withdraw
+      </button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  
 <!-- ===== ABOUT / CONTACT MODAL ===== -->
 <div id="infoModal" class="modal-overlay hidden">
   <div class="modal-card">
@@ -2629,6 +2753,39 @@ if (event.data === YT.PlayerState.PAUSED) {
 }
 
 
+
+
+const withdrawModal = document.getElementById("withdrawModal");
+const closeWithdrawModalBtn = document.getElementById("closeWithdrawModal");
+const withdrawAmountInput = document.getElementById("withdrawAmountInput");
+const withdrawError = document.getElementById("withdrawError");
+
+function openWithdrawModal() {
+  if (totalEarnings < 10) return;
+
+  document.getElementById("wdUserId").textContent = currentUserId;
+  document.getElementById("wdAddress").textContent =
+    currentAddress.slice(0, 6) + "…" + currentAddress.slice(-4);
+
+  withdrawAmountInput.value = totalEarnings.toFixed(2);
+  withdrawAmountInput.max = totalEarnings.toFixed(2);
+
+  withdrawError.classList.add("hidden");
+  withdrawModal.classList.remove("hidden");
+}
+
+function closeWithdrawModal() {
+  withdrawModal.classList.add("hidden");
+}
+
+closeWithdrawModalBtn?.addEventListener("click", closeWithdrawModal);
+withdrawModal.addEventListener("click", e => {
+  if (e.target === withdrawModal) closeWithdrawModal();
+});
+
+
+
+
     
 function completeVideoTask(task) {
   if (task.done) return;
@@ -2762,9 +2919,72 @@ function updateBalanceBox() {
 
   document.getElementById("balTasks").textContent = completedTasks.size;
   document.getElementById("balTotal").textContent = totalEarnings.toFixed(2);
+
+// 🔥 WITHDRAW LOGIC
+  const withdrawBtn  = document.getElementById("withdrawBtn");
+  const withdrawHint = document.getElementById("withdrawHint");
+
+  if (withdrawBtn) {
+    if (totalEarnings >= 10) {
+      withdrawBtn.disabled = false;
+      withdrawHint.textContent = "You can now withdraw";
+    } else {
+      withdrawBtn.disabled = true;
+      withdrawHint.textContent = "Minimum withdrawal: $10";
+    }
+  }
+  
 }
 
 
+
+
+const withdrawBtn = document.getElementById("withdrawBtn");
+
+withdrawBtn?.addEventListener("click", () => {
+  if (totalEarnings < 10) return;
+  openWithdrawModal();
+});
+
+
+
+document
+  .getElementById("confirmWithdrawBtn")
+  ?.addEventListener("click", () => {
+
+    const amount = Number(withdrawAmountInput.value);
+
+    if (Number.isNaN(amount) || amount < 10) {
+      withdrawError.textContent = "Minimum withdrawal amount is $10.";
+      withdrawError.classList.remove("hidden");
+      return;
+    }
+
+    if (amount > totalEarnings) {
+      withdrawError.textContent = "Amount exceeds available balance.";
+      withdrawError.classList.remove("hidden");
+      return;
+    }
+
+    // ✅ DEDUCT BALANCE
+    totalEarnings = Number((totalEarnings - amount).toFixed(2));
+
+    saveEarnings();
+    updateBalanceBox();
+    closeWithdrawModal();
+
+    // ✅ SUCCESS MESSAGE
+    alert(
+      "Withdrawal Requested ✅\n\n" +
+      "User ID: " + currentUserId + "\n" +
+      "Address: " + currentAddress + "\n" +
+      "Withdraw Amount: $" + amount.toFixed(2) + "\n\n" +
+      "Please allow up to 2 hours to receive the amount."
+    );
+  });
+
+    
+    
 function updateTaskProgress() {
   const totalTasks = document.querySelectorAll(
     ".task-section[data-task]"
