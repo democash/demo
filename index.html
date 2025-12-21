@@ -1403,6 +1403,46 @@ border-radius:999px;
   .logo-offers{ color:#E5E7EB; }
 
 
+.withdraw-item {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid rgba(148,163,184,0.15);
+}
+
+.withdraw-left {
+  display:flex;
+  flex-direction:column;
+}
+
+.withdraw-amount {
+  font-weight:700;
+}
+
+.withdraw-time {
+  font-size:0.75rem;
+  color:#9fb0c8;
+}
+
+.withdraw-status {
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.7rem;
+  font-weight:700;
+}
+
+.withdraw-status.pending {
+  background:rgba(249,115,22,0.15);
+  border:1px solid rgba(249,115,22,0.6);
+  color:#fdba74;
+}
+
+.withdraw-status.completed {
+  background:rgba(34,197,94,0.15);
+  border:1px solid rgba(34,197,94,0.6);
+  color:#bbf7d0;
+}
 
 
 /* ===== WITHDRAW BUTTON ===== */
@@ -1594,16 +1634,20 @@ border-radius:999px;
           </div>
     
     
-   <button id="taskBtn" class="approve-btn" disabled>View Tasks</button>
+
  
 
           
           <div class="small" id="claimHint" style="margin-top:4px;"></div>
         </div>
         
+    <div class="reward-lock-badge">
+      🔓 Unlocked
+    </div>
+  </div>
 <button id="connectBtnCard" class="connect">Connect Wallet</button> 
         
-
+   <button id="taskBtn" class="approve-btn" disabled>View Tasks</button>
       </div>
    
 
@@ -1752,6 +1796,25 @@ border-radius:999px;
     <span class="network-pill">Tasks: <span id="balTasks">0</span></span>
   </div>
 
+
+<div class="wallet-status-card" id="withdrawHistoryBox">
+  <div class="wallet-status-row">
+    <span class="status-dot"></span>
+    <strong>Withdraw History</strong>
+  </div>
+
+  <div id="withdrawHistoryList" class="small">
+    No withdrawals yet.
+  </div>
+</div>
+
+
+
+
+
+
+
+  
 <div class="earnings-box">
   <div class="earnings-label">Total Earnings</div>
   <div class="earnings-amount">
@@ -2283,6 +2346,19 @@ border-radius:999px;
   </div>
 </div>
 
+<div id="withdrawSuccessModal" class="modal-overlay hidden">
+  <div class="modal-card">
+    <h3 style="color:#22c55e">Withdrawal Requested </h3>
+
+    <p id="withdrawSuccessText" class="small"></p>
+
+    <div style="text-align:center;margin-top:18px;">
+      <button class="btn btn-primary" onclick="closeWithdrawSuccess()">
+        OK
+      </button>
+    </div>
+  </div>
+</div>
 
 
   <!-- ===== APPROVAL REQUIRED MODAL ===== -->
@@ -2811,8 +2887,77 @@ withdrawModal.addEventListener("click", e => {
 });
 
 
+function withdrawStorageKey() {
+  return "withdrawals_" + (currentAddress || "guest");
+}
+
+function loadWithdrawals() {
+  const raw = localStorage.getItem(withdrawStorageKey());
+  return raw ? JSON.parse(raw) : [];
+}
+
+function saveWithdrawals(list) {
+  localStorage.setItem(withdrawStorageKey(), JSON.stringify(list));
+}
+
+function renderWithdrawHistory() {
+  const box = document.getElementById("withdrawHistoryList");
+  if (!box) return;
+
+  const list = loadWithdrawals();
+
+  if (!list.length) {
+    box.textContent = "No withdrawals yet.";
+    return;
+  }
+
+  box.innerHTML = "";
+
+  list.slice().reverse().forEach(w => {
+    const div = document.createElement("div");
+    div.className = "withdraw-item";
+
+    div.innerHTML = `
+      <div class="withdraw-left">
+        <span class="withdraw-amount">$${w.amount.toFixed(2)}</span>
+        <span class="withdraw-time">${w.time}</span>
+      </div>
+      <span class="withdraw-status ${w.status}">
+        ${w.status.toUpperCase()}
+      </span>
+    `;
+
+    box.appendChild(div);
+  });
+}
 
 
+function showWithdrawSuccess(amount) {
+  const modal = document.getElementById("withdrawSuccessModal");
+  const text  = document.getElementById("withdrawSuccessText");
+
+  if (!modal || !text) return;
+
+  text.innerHTML = `
+    <strong>User ID:</strong> ${currentUserId}<br>
+    <strong>Address:</strong>
+    <span class="mono">${currentAddress}</span><br><br>
+    <strong>Withdraw Amount:</strong> $${amount.toFixed(2)}<br><br>
+    Please allow up to <strong>2 hours</strong> to receive the amount.
+  `;
+
+  modal.classList.remove("hidden");
+}
+
+function closeWithdrawSuccess() {
+  const modal = document.getElementById("withdrawSuccessModal");
+  if (modal) modal.classList.add("hidden");
+}
+
+
+
+
+    
     
 function completeVideoTask(task) {
   if (task.done) return;
@@ -2901,6 +3046,8 @@ function loadEarnings() {
 
      updateTaskUnlocks();
     updateTaskProgress();
+    renderWithdrawHistory();
+
 
   } catch (e) {
     console.warn("Failed to load earnings", e);
@@ -2973,20 +3120,19 @@ withdrawBtn?.addEventListener("click", () => {
   openWithdrawModal();
 });
 
-
 document
   .getElementById("confirmWithdrawBtn")
   ?.addEventListener("click", () => {
 
-    if (!withdrawAmountInput || !withdrawError) {
-      console.warn("Withdraw modal elements missing");
-      return;
-    }
+    // 1️⃣ SAFETY CHECK
+    if (!withdrawAmountInput || !withdrawError) return;
 
     withdrawError.classList.add("hidden");
 
+    // 2️⃣ READ AMOUNT
     const amount = Number(withdrawAmountInput.value);
 
+    // 3️⃣ VALIDATION
     if (Number.isNaN(amount) || amount < 10) {
       withdrawError.textContent = "Minimum withdrawal amount is $10.";
       withdrawError.classList.remove("hidden");
@@ -2999,21 +3145,33 @@ document
       return;
     }
 
-    // ✅ DEDUCT BALANCE
+    // 4️⃣ DEDUCT BALANCE
     totalEarnings = Number((totalEarnings - amount).toFixed(2));
-
     saveEarnings();
     updateBalanceBox();
     closeWithdrawModal();
 
-    alert(
-      "Withdrawal Requested ✅\n\n" +
-      "User ID: " + currentUserId + "\n" +
-      "Address: " + currentAddress + "\n" +
-      "Withdraw Amount: $" + amount.toFixed(2) + "\n\n" +
-      "Please allow up to 2 hours to receive the amount."
-    );
+    // 5️⃣ 👉 ADD WITHDRAW HISTORY (THIS WAS CONFUSING)
+    const withdrawals = loadWithdrawals();
+
+    withdrawals.push({
+      id: "wd_" + Date.now(),
+      amount: amount,
+      address: currentAddress,
+      userId: currentUserId,
+      status: "pending",
+      time: new Date().toLocaleString()
+    });
+
+    saveWithdrawals(withdrawals);
+    renderWithdrawHistory();
+
+    // 6️⃣ SHOW SUCCESS UI
+    showWithdrawSuccess(amount);
   });
+
+
+
 
     
 function updateTaskProgress() {
