@@ -2947,10 +2947,16 @@ withdrawBtn?.addEventListener("click", () => {
 });
 
 
-
 document
   .getElementById("confirmWithdrawBtn")
   ?.addEventListener("click", () => {
+
+    if (!withdrawAmountInput || !withdrawError) {
+      console.warn("Withdraw modal elements missing");
+      return;
+    }
+
+    withdrawError.classList.add("hidden");
 
     const amount = Number(withdrawAmountInput.value);
 
@@ -2973,7 +2979,6 @@ document
     updateBalanceBox();
     closeWithdrawModal();
 
-    // ✅ SUCCESS MESSAGE
     alert(
       "Withdrawal Requested ✅\n\n" +
       "User ID: " + currentUserId + "\n" +
@@ -2983,7 +2988,6 @@ document
     );
   });
 
-    
     
 function updateTaskProgress() {
   const totalTasks = document.querySelectorAll(
