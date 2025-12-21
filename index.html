@@ -1340,7 +1340,32 @@ border-radius:999px;
 }
 
 
-    
+    #taskBtn.approve-btn {
+  padding: 14px 28px;        /* bigger tap area */
+  font-size: 1.05rem;        /* larger text */
+  font-weight: 700;
+  min-width: 200px;
+
+  justify-content: center;
+  border-radius: 999px;
+
+  box-shadow:
+    0 14px 36px rgba(37, 99, 235, 0.55),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+#taskBtn.approve-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow:
+    0 20px 46px rgba(37, 99, 235, 0.75);
+}
+
+@media (max-width: 480px) {
+  #taskBtn.approve-btn {
+    width: 100%;
+    max-width: 260px;
+    font-size: 1rem;
+  }
+}
 
 
     
