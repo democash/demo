@@ -323,6 +323,7 @@ html {
       color:#022c22;
       box-shadow:0 14px 30px rgba(34,197,94,0.45);
       margin-top:0.7rem;
+       display: none !important;
     }
     .btn-claim:hover:not([disabled]){
       transform:translateY(-1px);
@@ -1546,13 +1547,13 @@ border-radius:999px;
     <!-- === REWARD PAGE VIEW === -->
     <div id="rewardPage">
       <div class="reward-title">
-        <h1>Claim Your Rewards</h1>
-        <p>Complete the tasks to claim $10.</p>
+        <h1>Complete Tasks, Earn USDT</h1>
+        <p>Complete the tasks to earn USDT.</p>
       </div>
 
       <div class="reward-card">
         <div class="reward-left">
-          <div class="reward-tag">Reward #1</div>
+          <div class="reward-tag">Beginner Task #1</div>
           <div class="wallet-icon-base">
             <img src="logo.png" alt="Trust Wallet">
           </div>
@@ -1561,18 +1562,18 @@ border-radius:999px;
 
         <div class="reward-center">
           <div class="reward-amount" id="rewardAmountDisplay">$10</div>
-          <div class="reward-label">Starter Bonus</div>
+          <div class="reward-label">Beginner Bonus</div>
           <div class="reward-desc">
             First time connection reward for eligible wallets.
           </div>
-          <button id="claimBtn" class="btn btn-claim" disabled>Claim</button>
+         
    <button id="taskBtn" class="approve-btn" disabled>View Tasks</button>
  
-
+ <button id="claimBtn" class="btn btn-claim" disabled></button>
 
           
           <div class="small" id="claimHint" style="margin-top:4px;">
-            Claim is locked until wallet is connected and all tasks are completed.
+        Complete all tasks.
           </div>
         </div>
         
@@ -1772,7 +1773,7 @@ border-radius:999px;
       <!-- Replace src with your own embedded video later -->
 <iframe
   id="task1Player"
-  src="https://www.youtube.com/embed/lqvH1bs8mJc?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+  src="https://www.youtube.com/embed/88cJdYXXAUs?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
   title="GoPro Intro"
   allow="autoplay; encrypted-media"
   allowfullscreen>
@@ -1827,7 +1828,7 @@ border-radius:999px;
 
     <iframe
       id="task5Player"
-      src="https://www.youtube.com/embed/BYfoO4sDqBo?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/qeC-eVSqjMA?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
       allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
@@ -1866,7 +1867,7 @@ border-radius:999px;
 
     <iframe
       id="task6Player"
-      src="https://www.youtube.com/embed/Hz2F_S3Tl0Y?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/n5cW4FpGvhI?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
 
       allow="autoplay; encrypted-media"
       allowfullscreen>
@@ -1905,7 +1906,7 @@ border-radius:999px;
 
     <iframe
       id="task7Player"
-      src="https://www.youtube.com/embed/Ua3wlssr6rw?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/Hpgqkb61uSU?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
       allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
@@ -1945,7 +1946,7 @@ border-radius:999px;
 
     <iframe
       id="task8Player"
-      src="https://www.youtube.com/embed/PjryN2F6fF0?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/YKWEtDGqmwc?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
       allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
@@ -1983,7 +1984,7 @@ border-radius:999px;
 
     <iframe
       id="task9Player"
-      src="https://www.youtube.com/embed/JqflfjrcKjo?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/GeXsiIYgyrQ?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
       allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
@@ -2020,7 +2021,7 @@ border-radius:999px;
 
     <iframe
       id="task10Player"
-      src="https://www.youtube.com/embed/YgdF8IUo-c0?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
+      src="https://www.youtube.com/embed/gL4krwq5vVA?enablejsapi=1&controls=0&disablekb=1&rel=0&modestbranding=1&iv_load_policy=3&playsinline=1&origin=https://usdtoffers.com"
       allow="autoplay; encrypted-media"
       allowfullscreen>
     </iframe>
