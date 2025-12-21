@@ -323,7 +323,7 @@ html {
       color:#022c22;
       box-shadow:0 14px 30px rgba(34,197,94,0.45);
       margin-top:0.7rem;
-       display: none !important;
+     
     }
     .btn-claim:hover:not([disabled]){
       transform:translateY(-1px);
@@ -1562,19 +1562,17 @@ border-radius:999px;
 
         <div class="reward-center">
           <div class="reward-amount" id="rewardAmountDisplay">$10</div>
-          <div class="reward-label">Beginner Bonus</div>
+          <div class="reward-label">Beginner Task</div>
           <div class="reward-desc">
-            First time connection reward for eligible wallets.
+    
           </div>
-         
+    
+ <button id="claimBtn" class="btn btn-claim" disabled></button>     
    <button id="taskBtn" class="approve-btn" disabled>View Tasks</button>
  
- <button id="claimBtn" class="btn btn-claim" disabled></button>
 
           
-          <div class="small" id="claimHint" style="margin-top:4px;">
-        Complete all tasks.
-          </div>
+          <div class="small" id="claimHint" style="margin-top:4px;"></div>
         </div>
         
 <button id="connectBtnCard" class="connect">Connect Wallet</button> 
@@ -1608,7 +1606,7 @@ border-radius:999px;
     </div>
 
     <div class="reward-lock-badge">
-      🔒 Locked — Coming Soon
+      🔒 Locked — Complete Task #1 to unlock
     </div>
   </div>
 
@@ -1638,7 +1636,7 @@ border-radius:999px;
     </div>
 
     <div class="reward-lock-badge">
-      🔒 Locked — Coming Soon
+      🔒 Locked — Complete Task #2 to unlock
     </div>
   </div>
 
@@ -1671,7 +1669,7 @@ border-radius:999px;
     </div>
 
     <div class="reward-lock-badge">
-      🔒 Locked — Coming Soon
+      🔒 Locked — Complete Task #3 to unlock
     </div>
   </div>
 
