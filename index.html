@@ -4067,6 +4067,37 @@ let stableTicks = 0;
 const STABLE_REQUIRED = 3; // seconds of real playback
     
 
+
+
+function destroyTask(taskKey) {
+  const task = videoTasks[taskKey];
+  if (!task) return;
+
+  // stop timer
+  if (task.interval) {
+    clearInterval(task.interval);
+    task.interval = null;
+  }
+
+  // destroy youtube player (WebGL)
+  if (task.player) {
+    try {
+      task.player.stopVideo();
+      task.player.destroy();
+    } catch (e) {}
+    task.player = null;
+  }
+
+  // optional safety reset
+  task.watched = 0;
+  task.remaining = 0;
+}
+
+
+
+
+
+    
 function updateVideoTimerUI(task) {
   const textEl = document.getElementById(task.timerId);
   const ringEl = document.getElementById(task.ringId);
@@ -4518,6 +4549,29 @@ document
     showWithdrawSuccess(amount);
   });
 
+function destroyClaimedTasksOnRestore() {
+  if (!window.videoTasks || !window.claimedTasks) return;
+
+  claimedTasks.forEach(taskKey => {
+    const task = videoTasks[taskKey];
+    if (!task) return;
+
+    // stop interval
+    if (task.interval) {
+      clearInterval(task.interval);
+      task.interval = null;
+    }
+
+    // destroy player if exists
+    if (task.player) {
+      try {
+        task.player.stopVideo();
+        task.player.destroy();
+      } catch (e) {}
+      task.player = null;
+    }
+  });
+}
 
 
 
@@ -4556,6 +4610,8 @@ document.addEventListener("click", (e) => {
 
   claimedTasks.add(taskKey);
   totalEarnings += amount;
+  // ✅ DESTROY VIDEO / WEBGL AFTER CLAIM
+destroyTask(taskKey);
 
   btn.textContent = "Claimed ✓";
   btn.disabled = true;
@@ -4566,6 +4622,12 @@ document.addEventListener("click", (e) => {
 
 });
 
+
+
+
+
+
+    
 function showToast(message) {
   const toast = document.getElementById("toast");
   if (!toast) return;
@@ -4769,7 +4831,7 @@ updateApproveButtonUI();
         if(!isWalletConnected){
           claimHintEl.textContent = "Please connect your wallet first.";
         }else if(!allTasksDone){
-          claimHintEl.textContent = "Complete all tasks to unlock the Claim button.";
+          claimHintEl.textContent = "Complete Task to Earn USDT";
         }else{
           claimHintEl.textContent = "You can now claim your reward.";
         }
@@ -5320,6 +5382,8 @@ function showTaskPage() {
 
     
 function initVideoTask(taskKey) {
+  if (claimedTasks.has(taskKey)) return;
+
   if (!ytReady) return;
 
   const task = videoTasks[taskKey];
@@ -5450,6 +5514,15 @@ setupAppKitProviderWatcher();
       updateTaskUnlocks();
       updateTaskProgress();
 
+
+// 🔥 DESTROY VIDEO TASKS THAT ARE ALREADY CLAIMED (ON RESTORE)
+if (window.claimedTasks && window.videoTasks) {
+  claimedTasks.forEach(taskKey => {
+destroyTask(taskKey);
+  });
+}
+
+      
 
 
       if(connectBtn){
